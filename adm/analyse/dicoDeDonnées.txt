@@ -1,0 +1,57 @@
+Utilisateurs:
+•
+Rôles:
+•Visiteur
+•Lecteur
+•Auteur
+•Administrateur
+•
+Champs utilisateur:
+•Nom d'utilisateur
+•Mot de passe
+•Email
+•Profil (lecteur ou auteur)
+•Informations personnelles (lecteur ou auteur)
+Livres:
+•Champs livre:
+•Titre
+•Auteur
+•Catégorie
+•Fichier (pour le stockage des livres)
+Fonctionnalités:
+•
+Authentification et Gestion des Utilisateurs:
+•Système d'authentification avec des rôles.
+•Inscription d'utilisateurs avec des profils distincts (lecteur, auteur).
+•Profil administrateur pour la gestion des utilisateurs.
+•
+Gestion des Livres:
+•Création, modification et suppression de livres (administrateur).
+•Téléchargement et lecture de livres (lecteurs et auteurs).
+•Téléversement de livres (auteurs).
+•Classement des livres par catégorie.
+•
+Interface Utilisateur:
+•Page d'accueil avec une liste de livres.
+•Pages de détails de livre.
+•Profils d'utilisateurs avec des informations personnelles (lecteur, auteur).
+•Panier de lecture pour les lecteurs.
+•
+Sécurité:
+•Protection contre l'accès non autorisé aux fonctionnalités (authentification requise).
+•Gestion des autorisations basées sur les rôles.
+•
+Recherche:
+•Barre de recherche pour trouver des livres par titre, auteur ou catégorie.
+Technologie:
+•
+Symfony Framework: Utilisation de Symfony pour le développement.
+•
+Base de Données: Utilisation d'une base de données (MySQL, PostgreSQL, etc.) pour stocker les informations sur les livres et les utilisateurs.
+•
+Stockage de Fichiers: Stockage des fichiers de livres sur le serveur.
+Documentation:
+•
+Documentation du code source: Documentation décrivant le fonctionnement du code source du projet.
+•
+Instructions d'installation et de déploiement: Instructions détaillées pour l'installation et le déploiement du site web symfoLivre.
