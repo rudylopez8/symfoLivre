@@ -1,0 +1,73 @@
+@startuml Cas d'Utilisation : Authentification
+
+actor Utilisateur as Utilisateur
+actor Administrateur as Admin
+
+Utilisateur --> (S'Authentifier)
+(S'Authentifier) --> (Accéder au Site)
+(Admin) --> (Gérer Utilisateurs)
+
+@enduml
+
+@startuml Cas d'Utilisation : Gestion des Utilisateurs
+
+actor Administrateur as Admin
+
+(Admin) --> (Créer Utilisateur)
+(Admin) --> (Modifier Utilisateur)
+(Admin) --> (Supprimer Utilisateur)
+(Admin) --> (Consulter Profil Utilisateur)
+
+@enduml
+
+@startuml Cas d'Utilisation : Gestion des Livres
+
+actor Administrateur as Admin
+actor Lecteur as Lecteur
+actor Auteur as Auteur
+
+(Admin) --> (Créer Livre)
+(Admin) --> (Modifier Livre)
+(Admin) --> (Supprimer Livre)
+(Lecteur) --> (Télécharger Livre)
+(Lecteur) --> (Lire Livre)
+(Auteur) --> (Téléverser Livre)
+
+@enduml
+
+@startuml Cas d'Utilisation : Interface Utilisateur
+
+actor Utilisateur as Utilisateur
+actor Administrateur as Admin
+
+(Utilisateur) --> (Page d'Accueil)
+(Utilisateur) --> (Page de Détails de Livre)
+(Utilisateur) --> (Profil Utilisateur)
+(Lecteur) --> (Panier de Lecture)
+(Admin) --> (Panier de Lecture)
+
+@enduml
+
+@startuml Cas d'Utilisation : Sécurité
+
+actor Utilisateur as Utilisateur
+actor Administrateur as Admin
+
+(Utilisateur) --> (S'Authentifier)
+(S'Authentifier) --> (Accéder au Site)
+(S'Authentifier) --> (Accès Non Autorisé)
+(Admin) --> (Gérer Utilisateurs)
+(Utilisateur) --> (Gérer Livres)
+(Gérer Livres) --> (Accès Non Autorisé)
+
+@enduml
+
+@startuml Cas d'Utilisation : Recherche
+
+actor Utilisateur as Utilisateur
+actor Administrateur as Admin
+
+(Utilisateur) --> (Barre de Recherche)
+(Barre de Recherche) --> (Trouver Livre)
+
+@enduml

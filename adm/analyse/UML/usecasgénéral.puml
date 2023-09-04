@@ -1,0 +1,35 @@
+@startuml
+left to right direction
+actor Auteur as Auteur
+actor Lecteur as Lecteur
+actor Administrateur as Admin
+
+rectangle "Cas d'Utilisation" {
+  (S'Authentifier)
+  (Gérer Utilisateurs)
+  (Consulter Livres)
+  (Barre de Recherche)
+}
+
+Auteur --> (S'Authentifier)
+Auteur --> (Consulter Livres)
+Auteur --> (Gérer Livres)
+Lecteur --> (S'Authentifier)
+Lecteur --> (Consulter Livres)
+Admin --> (S'Authentifier)
+Admin --> (Consulter Livres)
+Admin --> (Gérer Utilisateurs)
+Admin --> (Gérer Livres)
+
+(S'Authentifier) --> (Accéder au Site)
+(S'Authentifier) --> (Accès Non Autorisé)
+(Gérer Utilisateurs) --> (Créer Utilisateur)
+(Gérer Utilisateurs) --> (Modifier Utilisateur)
+(Gérer Utilisateurs) --> (Supprimer Utilisateur)
+(Gérer Utilisateurs) --> (Consulter Profil Utilisateur)
+(Consulter Livres) --> (Télécharger Livre)
+(Consulter Livres) --> (Lire Livre)
+(Barre de Recherche) --> (Trouver Livre)
+(Barre de Recherche) --> (Afficher Résultats)
+
+@enduml
