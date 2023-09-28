@@ -1,4 +1,5 @@
 @startuml
+skinparam actorStyle actor
 left to right direction
 actor Auteur as Auteur
 actor Lecteur as Lecteur
@@ -9,6 +10,8 @@ rectangle "Cas d'Utilisation" {
   (Gérer Utilisateurs)
   (Consulter Livres)
   (Barre de Recherche)
+  (Gérer Son Compte)
+  (Gérer Les Membres)
 }
 
 Auteur --> (S'Authentifier)
@@ -20,6 +23,10 @@ Admin --> (S'Authentifier)
 Admin --> (Consulter Livres)
 Admin --> (Gérer Utilisateurs)
 Admin --> (Gérer Livres)
+Auteur --> (Gérer Son Compte)
+Lecteur --> (Gérer Son Compte)
+Admin --> (Gérer Son Compte)
+Admin --> (Gérer Les Membres)
 
 (S'Authentifier) --> (Accéder au Site)
 (S'Authentifier) --> (Accès Non Autorisé)
