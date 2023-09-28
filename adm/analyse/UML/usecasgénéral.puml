@@ -8,6 +8,7 @@ actor Administrateur as Admin
 rectangle "Cas d'Utilisation" {
   (S'Authentifier)
   (Gérer Utilisateurs)
+  (Gérer Livres)
   (Consulter Livres)
   (Barre de Recherche)
   (Gérer Son Compte)
@@ -36,6 +37,8 @@ Admin --> (Gérer Les Membres)
 (Gérer Utilisateurs) --> (Consulter Profil Utilisateur)
 (Consulter Livres) --> (Télécharger Livre)
 (Consulter Livres) --> (Lire Livre)
+(Gérer Livres) --> (Téléverser Livre)
+(Gérer Livres) --> (Supprimer Livre)
 (Barre de Recherche) --> (Trouver Livre)
 (Barre de Recherche) --> (Afficher Résultats)
 
