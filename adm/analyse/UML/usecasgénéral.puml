@@ -6,31 +6,42 @@ actor Lecteur as Lecteur
 actor Administrateur as Admin
 
 rectangle "Cas d'Utilisation" {
-  (S'Authentifier)
+  (Authentifier)
   (Gérer Utilisateurs)
   (Gérer Livres)
   (Consulter Livres)
   (Barre de Recherche)
   (Gérer Son Compte)
   (Gérer Les Membres)
-}
 
-Auteur --> (S'Authentifier)
-Auteur --> (Consulter Livres)
-Auteur --> (Gérer Livres)
-Lecteur --> (S'Authentifier)
+
+Lecteur --> (Authentifier)
 Lecteur --> (Consulter Livres)
-Admin --> (S'Authentifier)
+Lecteur --> (Gérer Son Compte)
+
+/' Auteur --> (Authentifier)  
+Auteur --> (Consulter Livres)
+Auteur --> (Gérer Son Compte) '/
+Auteur --> (Gérer Livres)
+Auteur -down-|> Lecteur
+
+/' Admin --> (Authentifier)
 Admin --> (Consulter Livres)
+Admin --> (Gérer Son Compte) '/
+
 Admin --> (Gérer Utilisateurs)
 Admin --> (Gérer Livres)
-Auteur --> (Gérer Son Compte)
-Lecteur --> (Gérer Son Compte)
-Admin --> (Gérer Son Compte)
 Admin --> (Gérer Les Membres)
 
-(S'Authentifier) --> (Accéder au Site)
-(S'Authentifier) --> (Accès Non Autorisé)
+Admin -down-|> Auteur 
+
+(Authentifier) -> (Accéder au Site)
+/'(Authentifier) .>(Consulter Livres)
+(Authentifier) .> (Gérer Son Compte)
+(Authentifier) .> (Gérer Livres)
+(Authentifier) .> (Gérer Utilisateurs) '/
+
+/'(Authentifier) --> (Accès Non Autorisé) '/
 (Gérer Utilisateurs) --> (Créer Utilisateur)
 (Gérer Utilisateurs) --> (Modifier Utilisateur)
 (Gérer Utilisateurs) --> (Supprimer Utilisateur)
@@ -41,5 +52,7 @@ Admin --> (Gérer Les Membres)
 (Gérer Livres) --> (Supprimer Livre)
 (Barre de Recherche) --> (Trouver Livre)
 (Barre de Recherche) --> (Afficher Résultats)
+
+}
 
 @enduml
