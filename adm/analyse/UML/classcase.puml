@@ -1,0 +1,48 @@
+@startuml RessourceTeque
+
+Class User <<entity>> {
+    -idUser: int
+    -nomUser: string
+    -mailUser: string
+    -passwordUser: string
+    -roleUser: role
+
+    +ajouterUser(nomUser: string, mailUser: string, passwordUser: string, roleUser: role): void
+    +modifierUser(idUser: int): void
+    +supprimerUser(idUser: int): void
+}
+
+Class Categorie <<entity>> {
+    -idCategorie: int
+    -titreCategorie: string
+    -informationCategorie: string
+
+    +ajouterCategorie(titreCategorie: string, informationCategorie: string): void
+    +modifierCategorie(idCategorie: int): void
+    +supprimerCategorie(idCategorie: int): void
+}
+
+Class Livre <<entity>> {
+    -idLivre: int
+    -auteurLivre: User
+    -titreLivre: string
+    -fichierLivre: string
+    -categorieLivre: Categorie
+
+    +ajouterLivre(titreLivre: string, auteurLivre: User, fichierLivre: string, categorieLivre: Categorie): void
+    +modifierLivre(idLivre: int): void
+    +supprimerLivre(idLivre: int): void
+}
+
+Class BarreDeRecherche <<entity>> {
+    -resultatsRecherche: array
+
+    +afficherTousLesLivres(requete: string): array
+    +chercherLivre(requete: string): array
+
+    note right #aquamarine
+    Cette méthode affiche tous les livres en les classant selon le paramètre reçu (requete).
+    end note
+}
+
+@enduml
