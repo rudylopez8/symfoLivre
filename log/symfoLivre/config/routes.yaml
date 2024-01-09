@@ -1,7 +1,12 @@
-#index:
-#    path: /admin
-#    controller: App\Controller\AdminController::index
-#homepage:
-index:
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
+home:
   path: /
-  controller: App\Controller\AdminController::index
+  controller: App\Controller\HomeController::index
+
+#home:
+#  path: /
+#  defaults:
+#    _controller: #App\Controller\HomeController::index
