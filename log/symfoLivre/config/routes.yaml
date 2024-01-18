@@ -10,3 +10,6 @@ home:
 #  path: /
 #  defaults:
 #    _controller: #App\Controller\HomeController::index
+adm_user_new:
+  path: /new
+  controller: App\Controller\UserController::new

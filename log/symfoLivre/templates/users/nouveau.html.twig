@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Users{% endblock %}
+
+{% block body %}
+
+    {% include("menus/navigation_admin.html.twig") %}
+    {% include("headers/header_admin.html.twig") %}
+     
+        <article class="col-md-12 maincontent">
+            <div class="container">
+                <div class="row">
+                    <hr>
+                    <h1>Nouvel Utilisateur</h1>
+                        {{ include('users/_form.html.twig') }}
+                </div><br><br>
+                {# <a href="{{ path('adm_users') }} " class="btn btn-primary">Liste des Utilisateurs</a>#}
+            </div>
+        </article>
+{% endblock %}

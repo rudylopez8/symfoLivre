@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    {% include("menus/navigation_admin.html.twig") %}
+    {% include("headers/header_admin.html.twig") %}
+                
+        <article class="col-md-12 maincontent">
+            <div class="container">
+                <div class="row">
+                   <h1>{{ users.noms }} users' Profil </h1> | 
+                   <hr>
+
+                        <article>                        
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2 display-6">Noms:</div>
+                                    <div class="col-sm-10 display-6">{{ users.noms }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 display-6">Prénoms:</div>
+                                    <div class="col-sm-10 display-6">{{ users.prenoms }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 display-6">Adresse:</div>
+                                    <div class="col-sm-10 display-6">{{ users.adresse }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 display-6">Emails:</div>
+                                    <div class="col-sm-10 display-6">{{ users.mail }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 display-6">Télephone:</div>
+                                    <div class="col-sm-10 display-6">{{ users.phone }}</div>
+                                </div>
+
+                            </div>
+                        </article>
+                        
+                </div>     
+                 
+                 <br><br><br>
+                 <a href="{{ path('adm_users') }}" class="btn btn-primary"> Liste des Utilisateurs /  </a>        
+            </div>
+                
+            <br> <br>
+        </article> 
+          
+{% endblock%}
+
+
+
+
