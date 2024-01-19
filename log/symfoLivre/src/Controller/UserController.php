@@ -26,7 +26,7 @@ class UserController extends AbstractController
     }
 
 
-    public function new(Request $request, UserRepository $userRepository, EntityManagerInterface $em): Response
+    public function new(Request $request, UserRepository $UserRepository, EntityManagerInterface $em): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -34,7 +34,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user, true);
+            $UserRepository->add($user, true);
           
            //$em->persist($user);
            //$em->flush();
@@ -50,5 +50,26 @@ class UserController extends AbstractController
 
 
 
+    #[Route('/u/nouv', name: 'utilisateur.nouv')]
+    public function nouvelUtilisateur(Request $request, EntityManagerInterface $manager)
+    {
+        $user = new User(); // user vide pret à etre rempli
+        $form = $this->createForm(UserType::class, $user);  // Creation du Form qui est lié à mon user
+
+        $form->handleRequest($request);         // Le Request
+
+        if ($form->isSubMitted() && $form->isValid()) // Soumission du Formulaire & le Formulaire est valide
+        {
+            $manager->persist($user); // Persistancede mon user
+            $manager->flush(); // Enregistrement de user dans la BD 
+            return $this->redirectToRoute('user'); // Redirection vers l'affichage
+        }
+
+        return $this->render('user/index.html.twig', [
+            'formUtilisateur' => $form->createView()
+        ]); // On ne va pas passer à Twig $form parce que tres lourd et difficile 
+        //On passe ici à twig une variable facile à Afficher
+        // Twig va donc avoir le resultat de la Function CreateView du formulaire. C'est l'asspect Affichage que nou spassons au formulaire
+    }
 
 }
