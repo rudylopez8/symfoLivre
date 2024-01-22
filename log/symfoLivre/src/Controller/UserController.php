@@ -25,28 +25,28 @@ class UserController extends AbstractController
         ]);
     }
 
-
-    public function new(Request $request, UserRepository $UserRepository, EntityManagerInterface $em): Response
+    public function new(Request $request, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $UserRepository->add($user, true);
-          
-           //$em->persist($user);
-           //$em->flush();
-           
-           return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+            // Utilisez persist pour préparer l'entité à être persistée
+            $em->persist($user);
+            // Utilisez flush pour effectivement enregistrer l'entité en base de données
+            $em->flush();
+    
+            return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->renderForm('user/nouveau.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
+    
 
 
 
@@ -65,7 +65,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user'); // Redirection vers l'affichage
         }
 
-        return $this->render('user/index.html.twig', [
+        return $this->render('user/nouveau.html.twig', [
             'formUtilisateur' => $form->createView()
         ]); // On ne va pas passer à Twig $form parce que tres lourd et difficile 
         //On passe ici à twig une variable facile à Afficher
