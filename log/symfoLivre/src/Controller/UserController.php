@@ -14,10 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+/**
+ * @Route("/user")
+ */
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
+    //#[Route('/user', name: 'app_user')]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
@@ -47,29 +50,26 @@ class UserController extends AbstractController
         ]);
     }
     
+//    public function suppr(Request $request, User $user, UserRepository $userRepository): Response
+//        {
+//        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {        
+//             $userRepository->remove($user, true);
+//            
+//            //$manager= $this->getDoctrine()-getManager();
+//                
+//            //    $this->$manager->remove(User);
+//            //    $manager->flush();
+//        }
+//        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+//    }
 
-
-
-    #[Route('/u/nouv', name: 'utilisateur.nouv')]
-    public function nouvelUtilisateur(Request $request, EntityManagerInterface $manager)
+    public function suppr(Request $request, User $user, EntityManagerInterface $em): Response
     {
-        $user = new User(); // user vide pret à etre rempli
-        $form = $this->createForm(UserType::class, $user);  // Creation du Form qui est lié à mon user
-
-        $form->handleRequest($request);         // Le Request
-
-        if ($form->isSubMitted() && $form->isValid()) // Soumission du Formulaire & le Formulaire est valide
-        {
-            $manager->persist($user); // Persistancede mon user
-            $manager->flush(); // Enregistrement de user dans la BD 
-            return $this->redirectToRoute('user'); // Redirection vers l'affichage
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $em->remove($user);
+            $em->flush();
         }
 
-        return $this->render('user/nouveau.html.twig', [
-            'formUtilisateur' => $form->createView()
-        ]); // On ne va pas passer à Twig $form parce que tres lourd et difficile 
-        //On passe ici à twig une variable facile à Afficher
-        // Twig va donc avoir le resultat de la Function CreateView du formulaire. C'est l'asspect Affichage que nou spassons au formulaire
+        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
     }
-
 }
