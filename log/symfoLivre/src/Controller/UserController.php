@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+
+
 /**
  * @Route("/user")
  */
@@ -50,15 +52,16 @@ class UserController extends AbstractController
         ]);
     }
     
-    public function suppr(Request $request, User $user, UserRepository $userRepository): Response
+    #[Route('/{id}', name: 'users_sup', methods:['POST'])]
+    public function suppr(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $manager): Response
         {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {        
-             $userRepository->remove($user, true);
+            $manager->remove($user);
             
             //$manager= $this->getDoctrine()-getManager();
                 
-            //    $this->$manager->remove(User);
-            //    $manager->flush();
+                //$this->$manager->remove(User);
+            $manager->flush();
         }
         return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
     }
