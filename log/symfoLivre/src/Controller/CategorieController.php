@@ -41,7 +41,7 @@ class CategorieController extends AbstractController
             // Utilisez flush pour effectivement enregistrer l'entité en base de données
             $em->flush();
     
-            return $this->redirectToRoute('categorie', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->renderForm('categorie/nouveau.html.twig', [
@@ -60,8 +60,46 @@ class CategorieController extends AbstractController
                 //$this->$manager->remove(Categorie);
             $manager->flush();
         }
-        return $this->redirectToRoute('categorie', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
     }
-
+    /**
+    * @Route("/{id}", name="categorie_display", methods={"GET"} )
+    */
+    public function displayCategorie(Categorie $categorie)
+    {
+        //$repo = $this->getDoctrine()->getRepository(Categorie::class);
+        //$categorie= $repo->find($id);
+        
+        return $this->render('categorie/affichage.html.twig', [
+ 
+            'categorie'=>$categorie
+ 
+        ]);
+    }
+ 
+    
+    
+ 
+     /**
+      * @Route("/{id}/edit", name="categorie_edit", methods={"GET", "POST"})
+      */
+     public function edit( EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
+     {
+         $form = $this->createForm(CategorieType::class, $categorie);
+         $form->handleRequest($request);
+ 
+         if ($form->isSubmitted() && $form->isValid()) {
+             
+             //$categorieRepository->add($categorie, true);
+             $em->persist($categorie);
+             $em->flush();
+             return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
+         }
+ 
+         return $this->renderForm('categorie/edit.html.twig', [
+             'categorie' => $categorie,
+             'form' => $form,
+         ]);
+    } 
 
 }

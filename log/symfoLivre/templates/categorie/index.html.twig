@@ -20,7 +20,7 @@
 					<thead>
 						<tr>
 							<th>Id</th>
-							<th>Id</th>
+							<th>nom</th>
                             
 							<th>Action</th>
 						</tr>
@@ -30,13 +30,15 @@
 						{% for categorie in categorie %}
 							<tr>
 								<td>
-
 									{{categorie.id}}
+								</td>
+								<td>
 									{{categorie.nomCategorie}}
 								</td>
 								<td>
-								<a href="##">editer |</a>
-<th>{{ include('categorie/_delete_form.html.twig') }}   </th>
+<th><a href="{{path('categorie_display', {'id': categorie.id} ) }}" class="btn btn-dark"> Affichage</a> </th>
+                                    <th><a href="{{path('categorie_edit', {'id': categorie.id} ) }}" class="btn btn-dark"> Edit</a> </th>
+                                    <th>{{ include('categorie/_delete_form.html.twig') }}   </th>
                                                                         
 
 								</td>

@@ -65,4 +65,44 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+    * @Route("/{id}", name="user_display", methods={"GET"} )
+    */
+   public function displayUser(User $user)
+   {
+       //$repo = $this->getDoctrine()->getRepository(User::class);
+       //$user= $repo->find($id);
+       
+       return $this->render('user/affichage.html.twig', [
+
+           'user'=>$user
+
+       ]);
+   }
+
+   
+   
+
+    /**
+     * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
+     */
+    public function edit( EntityManagerInterface $em, Request $request, User $user, UserRepository $userRepository): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            //$userRepository->add($user, true);
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute('app_user', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
 }
