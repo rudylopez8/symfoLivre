@@ -16,13 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
-/**
- * @Route("/user")
- */
-
 class UserController extends AbstractController
 {
-    //#[Route('/user', name: 'app_user')]
+    #[Route('/user', name: 'app_user')]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
@@ -30,6 +26,9 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/user_new", name="user_new", methods={"GET", "POST"})
+     */
     public function new(Request $request, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $user = new User();
@@ -66,22 +65,4 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
     }
 
-
-/**
-    public function suppr(Request $request, int $userId, EntityManagerInterface $em): Response
-    {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé');
-        }
-
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $em->remove($user);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
-    }
-*/    
 }

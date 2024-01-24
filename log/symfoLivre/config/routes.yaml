@@ -10,17 +10,4 @@ home:
 #  path: /
 #  defaults:
 #    _controller: #App\Controller\HomeController::index
-adm_user_new:
-    path: /new
-    controller: App\Controller\UserController::new
-
-
-categorie_new:
-    path: /categorie_new
-    controller: App\Controller\CategorieController::new
-
-user:
-    path: /user
-    controller: App\Controller\UserController::index
-
 

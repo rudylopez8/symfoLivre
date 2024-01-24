@@ -21,10 +21,13 @@ class CategorieController extends AbstractController
     public function index(CategorieRepository $categorieRepository): Response
     {
         return $this->render('categorie/index.html.twig', [
-            'categories' => $categorieRepository->findAll(),
+            'categorie' => $categorieRepository->findAll(),
         ]);
     }
 
+    /**
+     * @Route("/categorie_new", name="categorie_new", methods={"GET", "POST"})
+     */
     public function new(Request $request, CategorieRepository $categorieRepository, EntityManagerInterface $em): Response
     {
         $categorie = new Categorie();
@@ -46,5 +49,19 @@ class CategorieController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/{id}', name: 'cate_sup', methods:['POST'])]
+    public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
+        {
+        if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {        
+            $manager->remove($categorie);
+            
+            //$manager= $this->getDoctrine()-getManager();
+                
+                //$this->$manager->remove(Categorie);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('categorie', [], Response::HTTP_SEE_OTHER);
+    }
+
 
 }
