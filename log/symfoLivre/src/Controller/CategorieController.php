@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CategorieController extends AbstractController
 {
+    
     #[Route('/categorie', name: 'app_categorie')]
     public function index(CategorieRepository $categorieRepository): Response
     {
@@ -49,6 +50,20 @@ class CategorieController extends AbstractController
             'form' => $form,
         ]);
     }
+
+ /*
+    public function displayCategorie(Categorie $categorie)
+    {
+        //$repo = $this->getDoctrine()->getRepository(Categorie::class);
+        //$categorie= $repo->find($id);
+        
+        return $this->render('categorie/affichage.html.twig', [
+ 
+            'categorie'=>$categorie
+ 
+        ]);
+    }
+*/    
     #[Route('/{id}', name: 'cate_sup', methods:['POST'])]
     public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
         {
@@ -62,24 +77,7 @@ class CategorieController extends AbstractController
         }
         return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
     }
-    /**
-    * @Route("/{id}", name="categorie_display", methods={"GET"} )
-    */
-    public function displayCategorie(Categorie $categorie)
-    {
-        //$repo = $this->getDoctrine()->getRepository(Categorie::class);
-        //$categorie= $repo->find($id);
-        
-        return $this->render('categorie/affichage.html.twig', [
- 
-            'categorie'=>$categorie
- 
-        ]);
-    }
- 
-    
-    
- 
+   
      /**
       * @Route("/{id}/edit", name="categorie_edit", methods={"GET", "POST"})
       */
@@ -101,5 +99,7 @@ class CategorieController extends AbstractController
              'form' => $form,
          ]);
     } 
+
+    
 
 }

@@ -5,9 +5,3 @@ controllers:
 home:
     path: /
     controller: App\Controller\HomeController::index
-
-#home:
-#  path: /
-#  defaults:
-#    _controller: #App\Controller\HomeController::index
-

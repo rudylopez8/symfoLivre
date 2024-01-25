@@ -51,20 +51,7 @@ class UserController extends AbstractController
         ]);
     }
     
-    #[Route('/{id}', name: 'users_sup', methods:['POST'])]
-    public function suppr(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $manager): Response
-        {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {        
-            $manager->remove($user);
-            
-            //$manager= $this->getDoctrine()-getManager();
-                
-                //$this->$manager->remove(User);
-            $manager->flush();
-        }
-        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
-    }
-
+    
     /**
     * @Route("/{id}", name="user_display", methods={"GET"} )
     */
@@ -79,6 +66,22 @@ class UserController extends AbstractController
 
        ]);
    }
+   
+   #[Route('/{id}', name: 'users_sup', methods:['POST'])]
+    public function suppr(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $manager): Response
+        {
+            dump($user->getId()); // Affiche l'identifiant dans la console (utilisez dump pour Symfony 4+)        
+            if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {        
+            $manager->remove($user);
+            
+            //$manager= $this->getDoctrine()-getManager();
+                
+                //$this->$manager->remove(User);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+    }
+
 
    
    
@@ -96,7 +99,7 @@ class UserController extends AbstractController
             //$userRepository->add($user, true);
             $em->persist($user);
             $em->flush();
-            return $this->redirectToRoute('app_user', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LivreRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
@@ -26,6 +27,15 @@ class Livre
     #[ORM\ManyToOne(inversedBy: 'livres')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorieLivre = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resumeLivre = null;
+
+    #[ORM\Column]
+    private ?float $prixLivre = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateUploadLivre = null;
 
     public function getId(): ?int
     {
@@ -76,6 +86,42 @@ class Livre
     public function setCategorieLivre(?Categorie $categorieLivre): static
     {
         $this->categorieLivre = $categorieLivre;
+
+        return $this;
+    }
+
+    public function getResumeLivre(): ?string
+    {
+        return $this->resumeLivre;
+    }
+
+    public function setResumeLivre(?string $resumeLivre): static
+    {
+        $this->resumeLivre = $resumeLivre;
+
+        return $this;
+    }
+
+    public function getPrixLivre(): ?float
+    {
+        return $this->prixLivre;
+    }
+
+    public function setPrixLivre(float $prixLivre): static
+    {
+        $this->prixLivre = $prixLivre;
+
+        return $this;
+    }
+
+    public function getDateUploadLivre(): ?\DateTimeInterface
+    {
+        return $this->dateUploadLivre;
+    }
+
+    public function setDateUploadLivre(\DateTimeInterface $dateUploadLivre): static
+    {
+        $this->dateUploadLivre = $dateUploadLivre;
 
         return $this;
     }
