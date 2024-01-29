@@ -1,24 +1,20 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\User;
+use App\Form\User1Type;
 use App\Repository\UserRepository;
-use App\Form\UserType;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Integer;
-use PhpParser\Node\Expr\Cast\String_;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 
-
+#[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
+    #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
@@ -26,80 +22,44 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user_new", name="user_new", methods={"GET", "POST"})
-     */
-    public function new(Request $request, UserRepository $userRepository, EntityManagerInterface $em): Response
+    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        
+        $form = $this->createForm(User1Type::class, $user);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Utilisez persist pour préparer l'entité à être persistée
-            $em->persist($user);
-            // Utilisez flush pour effectivement enregistrer l'entité en base de données
-            $em->flush();
-    
-            return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-    
-        return $this->renderForm('user/nouveau.html.twig', [
+
+        return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
-    
-    
-    /**
-    * @Route("/{id}", name="user_display", methods={"GET"} )
-    */
-   public function displayUser(User $user)
-   {
-       //$repo = $this->getDoctrine()->getRepository(User::class);
-       //$user= $repo->find($id);
-       
-       return $this->render('user/affichage.html.twig', [
 
-           'user'=>$user
-
-       ]);
-   }
-   
-   #[Route('/{id}', name: 'users_sup', methods:['POST'])]
-    public function suppr(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $manager): Response
-        {
-            dump($user->getId()); // Affiche l'identifiant dans la console (utilisez dump pour Symfony 4+)        
-            if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {        
-            $manager->remove($user);
-            
-            //$manager= $this->getDoctrine()-getManager();
-                
-                //$this->$manager->remove(User);
-            $manager->flush();
-        }
-        return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    public function show(User $user): Response
+    {
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
     }
 
-
-   
-   
-
-    /**
-     * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
-     */
-    public function edit( EntityManagerInterface $em, Request $request, User $user, UserRepository $userRepository): Response
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(User1Type::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            //$userRepository->add($user, true);
-            $em->persist($user);
-            $em->flush();
-            return $this->redirectToRoute('user', [], Response::HTTP_SEE_OTHER);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -108,4 +68,14 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
