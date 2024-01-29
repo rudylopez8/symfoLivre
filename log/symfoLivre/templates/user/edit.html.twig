@@ -1,20 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Editoin Utilisateur{% endblock %}
 
 {% block body %}
     
-<div class="container">
-     <article>
-        <h2> Edition: {{user.nomUser}}</h2> <br>                    
-                        
-        <div>
+   <div class="container">
+	<!-- User main content -->
+	<user class="col-md-12 maincontent">
+		<div class="container">
+			<div class="row">
+				<h3>Edition Utilisateur</h3>
+				<hr style="width:100%; height:10px; background-color:#1B4F72 ">
 
-         </div> 
-          <br><br><br><br><br><br><br>
+                    {{ include('user/_form.html.twig', {'button_label': 'Editer'}) }}
+
+                    <a href="{{ path('app_user_index') }}"  class="btn btn-info">Liste des Utilisateurs</a>
+
+                    {{ include('user/_delete_form.html.twig') }}
+            </div>
         </div>
-    </article>   
-           
-    </div>
-
+    </user>
+</div>
 {% endblock %}
