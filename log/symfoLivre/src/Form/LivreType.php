@@ -17,8 +17,19 @@ class LivreType extends AbstractType
             ->add('resumeLivre')
             ->add('prixLivre')
             ->add('dateUploadLivre')
-            ->add('auteurLivre')
-            ->add('categorieLivre')
+            ->add('auteurLivre', EntityType::class, [
+                'class' => 'App\Entity\User', // le chemin réel de Categorie
+                'choice_label' => 'nomUser', // le champ à afficher
+                'multiple' => false,
+                'expanded' => false,
+            ])
+
+            ->add('categorieLivre', EntityType::class, [
+                'class' => 'App\Entity\Categorie', // le chemin réel de Categorie
+                'choice_label' => 'nomCategorie', // le champ à afficher
+                'multiple' => false,
+                'expanded' => false,
+            ])
         ;
     }
 
