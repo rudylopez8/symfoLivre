@@ -51,11 +51,12 @@ class CategorieController extends AbstractController
         ]);
     }
 
- /*
+    #[Route('/{id}/display', name: 'categorie_display', methods: ['GET', 'POST'])]
+
     public function displayCategorie(Categorie $categorie)
     {
-        //$repo = $this->getDoctrine()->getRepository(Categorie::class);
-        //$categorie= $repo->find($id);
+        $repo = $this->getDoctrine()->getRepository(Categorie::class);
+        $categorie= $repo->find($id);
         
         return $this->render('categorie/affichage.html.twig', [
  
@@ -63,7 +64,7 @@ class CategorieController extends AbstractController
  
         ]);
     }
-*/    
+    
     #[Route('/{id}', name: 'cate_sup', methods:['POST'])]
     public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
         {
