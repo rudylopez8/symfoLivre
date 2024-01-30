@@ -26,9 +26,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/categorie_new", name="categorie_new", methods={"GET", "POST"})
-     */
+    #[Route('/categorie_new', name: 'categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CategorieRepository $categorieRepository, EntityManagerInterface $em): Response
     {
         $categorie = new Categorie();
@@ -51,20 +49,26 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/display', name: 'categorie_display', methods: ['GET', 'POST'])]
-
-    public function displayCategorie(Categorie $categorie)
-    {
-        $repo = $this->getDoctrine()->getRepository(Categorie::class);
-        $categorie= $repo->find($id);
-        
-        return $this->render('categorie/affichage.html.twig', [
- 
-            'categorie'=>$categorie
- 
-        ]);
-    }
-    
+      #[Route('/{id}', name: 'categorie_edit', methods: ['POST'])]
+      public function edit( EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
+      {
+          $form = $this->createForm(CategorieType::class, $categorie);
+          $form->handleRequest($request);
+  
+          if ($form->isSubmitted() && $form->isValid()) {
+              
+              //$categorieRepository->add($categorie, true);
+              $em->persist($categorie);
+              $em->flush();
+              return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
+          }
+  
+          return $this->renderForm('categorie/edit.html.twig', [
+              'categorie' => $categorie,
+              'form' => $form,
+          ]);
+     } 
+  
     #[Route('/{id}', name: 'cate_sup', methods:['POST'])]
     public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
         {
@@ -78,29 +82,4 @@ class CategorieController extends AbstractController
         }
         return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
     }
-   
-     /**
-      * @Route("/{id}/edit", name="categorie_edit", methods={"GET", "POST"})
-      */
-     public function edit( EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
-     {
-         $form = $this->createForm(CategorieType::class, $categorie);
-         $form->handleRequest($request);
- 
-         if ($form->isSubmitted() && $form->isValid()) {
-             
-             //$categorieRepository->add($categorie, true);
-             $em->persist($categorie);
-             $em->flush();
-             return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
-         }
- 
-         return $this->renderForm('categorie/edit.html.twig', [
-             'categorie' => $categorie,
-             'form' => $form,
-         ]);
-    } 
-
-    
-
 }
