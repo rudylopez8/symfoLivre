@@ -47,5 +47,27 @@ class LivreController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'livre_show', methods: ['GET'])]
+    public function show(Livre $livre): Response
+    {
+        return $this->render('livre/show.html.twig', [
+            'livre' => $livre,
+        ]);
+    }
+
+
+    #[Route('/{id}', name: 'livre_sup', methods:['POST'])]
+    public function suppr(Request $request, Livre $livre, LivreRepository $livreRepository, EntityManagerInterface $manager): Response
+        {
+        if ($this->isCsrfTokenValid('delete'.$livre->getId(), $request->request->get('_token'))) {        
+            $manager->remove($livre);
+            
+            //$manager= $this->getDoctrine()-getManager();
+                
+                //$this->$manager->remove(Livre);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('Livre', [], Response::HTTP_SEE_OTHER);
+    }
 
 }

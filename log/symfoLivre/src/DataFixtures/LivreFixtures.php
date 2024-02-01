@@ -27,12 +27,19 @@ class LivreFixtures extends Fixture
             $manager->persist($user);
         }
 
-        // Créer des catégories
-        for ($j = 0; $j < 5; $j++) {
+        $categoriesData = [
+            ['nomCategorie' => 'Science-fiction', 'informationCategorie' => 'Livres de science-fiction'],
+            ['nomCategorie' => 'Roman', 'informationCategorie' => 'Livres romans'],
+            ['nomCategorie' => 'Fantasy', 'informationCategorie' => 'Livres de fantasy'],
+            ['nomCategorie' => 'Bio', 'informationCategorie' => 'Livres de biologie'],
+            // Ajoutez d'autres catégories selon vos besoins
+        ];
+
+        foreach ($categoriesData as $categoryData) {
             $categorie = new Categorie();
             $categorie
-                ->setNomCategorie($faker->word())
-                ->setInformationCategorie($faker->sentence());
+                ->setNomCategorie($categoryData['nomCategorie'])
+                ->setInformationCategorie($categoryData['informationCategorie']);
             $manager->persist($categorie);
 
             // Créer des livres
