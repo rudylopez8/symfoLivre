@@ -49,7 +49,7 @@ class CategorieController extends AbstractController
         ]);
     }
 
-      #[Route('/{id}', name: 'categorie_edit', methods: ['POST'])]
+      #[Route('/{id}/categorie_edit', name: 'categorie_edit', methods: ['POST'])]
       public function edit( EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
       {
           $form = $this->createForm(CategorieType::class, $categorie);
@@ -69,7 +69,7 @@ class CategorieController extends AbstractController
           ]);
      } 
   
-    #[Route('/{id}', name: 'cate_sup', methods:['POST'])]
+    #[Route('/{id}/cate_sup', name: 'cate_sup', methods:['POST'])]
     public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
         {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {        
