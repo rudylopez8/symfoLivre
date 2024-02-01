@@ -27,11 +27,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for user in livres %}
+
+                    {% for livre in livres %}
                         <tr>
-                            <td>{{ livres.id }}</td>
-                            <td>{{ livres.titreLivre }}</td>
-                            <td>{{ livre.auteurLivre }}</td>
+                            <td>{{ livre.id }}</td>
+                            <td>{{ livre.titreLivre }}</td>
+                            <td>{{ livre.auteurLivre.nomUser }}</td>
                             <td>
                                 {#<a href="{{ path('app_user_show', {'id': user.id}) }}"  class="btn btn-primary" >afficher /</a>#}
                                 {#<a href="{{ path('app_user_edit', {'id': user.id}) }}"  class="btn btn-success" >editer</a>#}

@@ -20,6 +20,7 @@ class LivreType extends AbstractType
             ->add('fichierLivre')
             ->add('resumeLivre')
             ->add('prixLivre')
+
             ->add('dateUploadLivre')
             ->add('auteurLivre', EntityType::class, [
                 'class' => 'App\Entity\User', // le chemin réel de User
@@ -27,20 +28,28 @@ class LivreType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
             ])
-            ->add('categorieLivre', EntityType::class, [
+            ->add('categorieLivre', null, [
+                'constraints' => [
+                    new Type([
+                        'type' => 'integer',
+                        'message' => 'Le champ doit être de type entier.'
+                    ]),
+                ],
+            ]);
+//            ->add('categorieLivre', EntityType::class, [
                 // Label du champ    
-                'label'  => 'Categorie',
-                'placeholder' => 'Categorie',
+//                'label'  => 'Categorie',
+//                'placeholder' => 'Categorie',
         
                 // looks for choices from this entity
-                'class' => Categorie::class,
+//                'class' => Categorie::class,
             
                 // Sur quelle propriete je fais le choix
-                'choice_label' => 'nomCategorie',
+//                'choice_label' => 'nomCategorie',
                 // used to render a select box, check boxes or radios
                 // 'multiple' => true,
                 //'expanded' => true,
-            ])
+//            ])
         ;
     }
 
