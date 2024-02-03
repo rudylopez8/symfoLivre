@@ -2,13 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Assert\EqualTo;
+use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity('email', message: "Mail deja utilisé")]
+
+class User implements UserInterface
+
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,6 +42,7 @@ class User
     public function __construct()
     {
         $this->livres = new ArrayCollection();
+//        $this->passwordHasher = $passwordHasher;
     }
 
     public function getId(): ?int
@@ -116,5 +126,44 @@ class User
         }
 
         return $this;
+    }
+    public function getRoles(): array
+    {
+        return [$this->roleUser];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Cette méthode est appelée lorsqu'un mot de passe en texte brut n'est plus nécessaire
+        // Vous pouvez y ajouter du code pour réinitialiser des informations sensibles du mot de passe
+        // Par exemple, si vous avez stocké un mot de passe en texte brut, vous pouvez le réinitialiser ici
+    }
+    public function getUsername(): string
+    {
+        // Dans Symfony 5.3 et versions ultérieures, getUserIdentifier remplace getUsername
+        // Pour garantir la compatibilité, vous pouvez renvoyer l'e-mail ici
+        return $this->mailUser;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->passwordUser;
+    }
+
+    public function getSalt(): ?string
+    {
+        // Vous pouvez laisser cette méthode vide, car les mots de passe sont stockés de manière sécurisée
+        // Et dans la plupart des cas, vous n'avez pas besoin d'utiliser une "salt" séparée
+        return null;
+    }
+    public function getUserIdentifier(): string
+    {
+        return $this->mailUser;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $hashedPassword = $this->passwordHasher->hashPassword($this, $password);
+        $this->passwordUser = $hashedPassword;
     }
 }
