@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use UserPasswordHasherAwareTrait;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('mailUser', message: "Mail deja utilisé")]
@@ -20,7 +21,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 {
-    //use UserPasswordHasherAwareTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -41,10 +41,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'auteurLivre', targetEntity: Livre::class)]
     private Collection $livres;
 
-    public function __construct()
+    private ?UserPasswordHasherInterface $passwordHasher = null;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->livres = new ArrayCollection();
-//        $this->passwordHasher = $passwordHasher;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function getId(): ?int
