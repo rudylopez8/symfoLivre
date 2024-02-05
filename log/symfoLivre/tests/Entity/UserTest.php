@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 use PHPUnit\Framework\TestCase;
 
@@ -11,14 +12,13 @@ class UserTest extends TestCase
     {
         $this->assertTrue(true);
     }
-    public function testIsTrue() // je fais à VRAI
+    public function testIsTrue(UserPasswordHasherInterface $passwordHasher) // je fais à VRAI
     {
+        $user = new User($passwordHasher); // Fournir le service UserPasswordHasherInterface ici
 
-        $user = New User();
-        
         $user ->setNomUser('Nom User')
-                    ->setMailUser('Mail User');         
-                    ->setPasswordUser('Password User');         
+                    ->setMailUser('Mail User')         
+                    ->setPasswordUser('PasswordUser')         
                     ->setRoleUser('Role User');         
 
                     $this->assertTrue($user->getNomUser()==='Nom de User');
