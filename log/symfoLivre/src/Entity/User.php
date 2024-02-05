@@ -12,13 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email', message: "Mail deja utilisé")]
+#[UniqueEntity('mailUser', message: "Mail deja utilisé")]
 
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 {
+    //use UserPasswordHasherAwareTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,7 +29,7 @@ class User implements UserInterface
     #[ORM\Column(length: 64)]
     private ?string $nomUser = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $mailUser = null;
 
     #[ORM\Column(length: 255)]
@@ -79,11 +81,10 @@ class User implements UserInterface
         return $this->passwordUser;
     }
 
-    public function setPasswordUser(string $passwordUser): static
+    public function setPasswordUser(string $password): void
     {
-        $this->passwordUser = $passwordUser;
-
-        return $this;
+        $hashedPassword = $this->passwordHasher->hashPassword($this, $password);
+        $this->passwordUser = $hashedPassword;
     }
 
     public function getRoleUser(): ?string
@@ -161,9 +162,4 @@ class User implements UserInterface
         return $this->mailUser;
     }
 
-    public function setPassword(string $password): void
-    {
-        $hashedPassword = $this->passwordHasher->hashPassword($this, $password);
-        $this->passwordUser = $hashedPassword;
-    }
 }

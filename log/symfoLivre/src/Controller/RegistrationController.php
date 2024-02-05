@@ -23,9 +23,9 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encodage du mot de passe avant de le sauvegarder dans la base de données
-            $user->setPassword(
-                $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData())
-            );
+            //$user->setPassword(
+                $user->setPasswordUser($form->get('passwordUser')->getData());
+           
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
