@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PANIER index
+{% endblock %}
+
+{% block body %}
+
+<div
+	class="container">
+	<!-- Article main content -->
+	<article class="col-md-12 maincontent">
+		<div class="container">
+			<div class="row">
+				<h3>
+					{#{ article.categorie.titre }#}
+					/ Mon Panier
+					{#{ article.titre }#}
+				</h3>
+				<hr style="width:100%; height:10px; background-color:#1B4F72 ">
+
+			</div>
+
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Libelle</th>
+						<th scope="col">Prix</th>
+						<th scope="col">Quantité</th>
+                        <th scope="col">Total</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for item in cardDatas %}
+					<tr>
+						<th scope="row">{{ item.article.id }} </th>
+						<td>{{ item.article.titre }}</td>
+						<td>{{ item.article.prix }}</td>
+						<td>{{ item.quantity  }}</td>
+                        <td>{{ item.quantity * item.article.prix  }}</td>
+					</tr>
+                    {% endfor %}
+				</tbody>
+			</table>
+
+
+		</tbody>
+	</table>
+    {{dump()}}
+</div></article></div>{% endblock%}

@@ -35,6 +35,9 @@
                             <td>{{ livre.auteurLivre.nomUser }}</td>
                             <td>
                                 {#<a href="{{ path('app_user_show', {'id': user.id}) }}"  class="btn btn-primary" >afficher /</a>#}
+{#<a href="{{ path('_ajout', {'id': livre.id}) }}" class="btn btn-primary">ajouter /</a>#}
+
+
                                 <a href="{{ path('app_livre_edit', {'id': livre.id}) }}"  class="btn btn-success" >editer</a>
 <th>{{ include('livre/_delete_form.html.twig') }}   </th>
                             

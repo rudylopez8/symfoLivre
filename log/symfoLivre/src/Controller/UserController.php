@@ -11,11 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    private ?UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher = null)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -57,28 +65,27 @@ class UserController extends AbstractController
     #[Route('/{id}/app_user_edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-
         $form = $this->createForm(UserType::class, $user, ['password_hasher' => $passwordHasher]);
 
-    $form->handleRequest($request);
-
+        $form->handleRequest($request);    
         if ($form->isSubmitted() && $form->isValid()) {
-        $newPassword = $form->get('passwordUser')->getData();
-
-        if ($newPassword !== null) {
-            $user->setPasswordUser($newPassword);
-        }
+            $newPassword = $form->get('passwordUser')->getData();
+    
+            if ($newPassword !== null) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPasswordUser($hashedPassword);
+            }
+    
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
-
     #[Route('/{id}/app_user_delete', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
