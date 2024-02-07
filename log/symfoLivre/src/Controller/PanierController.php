@@ -13,19 +13,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 
-#[Route('/panier', name:'panier')]
 
 class PanierController extends AbstractController
 { 
     
-#[Route('/index', name: 'index', methods: ['GET'])]
+#[Route('/panier', name: 'panier', methods: ['GET'])]
 public function index(LivreRepository $livreRepo, sessionInterface $session): Response
 {
     // JE recupère mon panier
     $panier = $session->get("panier", []);
     
     // On "fabrique" les données
-    $cardDatas = [];
+    $panier = [];
     $total = 0;
 
    // je boucle sur mon panier
@@ -49,7 +48,7 @@ public function index(LivreRepository $livreRepo, sessionInterface $session): Re
 }
 
 
-#[Route('/_ajout/{id}', name:'_ajout')]
+#[Route('/ajout/{id}', name:'ajout')]
 public function add(Livre $livre, SessionInterface $session)
 {
 #Base Symfony

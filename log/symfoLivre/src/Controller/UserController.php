@@ -17,12 +17,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    private ?UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher = null)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
@@ -35,9 +29,7 @@ class UserController extends AbstractController
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $user = new User($passwordHasher); // Fournir le service UserPasswordHasherInterface ici
 
-        //$user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -63,8 +55,33 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/app_user_edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
+        // Création du formulaire et traitement des données
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hachage du mot de passe s'il a été changé
+            if ($form->get('plainPassword')->getData()) {
+                $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur mis à jour avec succès !');
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+    public function edit2(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+    
         $form = $this->createForm(UserType::class, $user, ['password_hasher' => $passwordHasher]);
 
         $form->handleRequest($request);    
@@ -73,7 +90,9 @@ class UserController extends AbstractController
     
             if ($newPassword !== null) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+//        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                 $user->setPasswordUser($hashedPassword);
+
             }
     
             $entityManager->flush();

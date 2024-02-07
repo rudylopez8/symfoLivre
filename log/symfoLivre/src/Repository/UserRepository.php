@@ -20,6 +20,32 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+    public function findAllOrderByUsername()
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.nomUser', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllOrderByRole()
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.roleUser', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllUsersByRole(string $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roleUser = :role')
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
+
 //    public function findAll(): Collection
 //    {
 //        return $this->createQueryBuilder('u')

@@ -21,6 +21,61 @@ class LivreRepository extends ServiceEntityRepository
         parent::__construct($registry, Livre::class);
     }
 
+    public function findAllOrderByTitre()
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.titreLivre', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Fonction de tri par prix de livre
+    public function findAllOrderByPrix()
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.prixLivre', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Fonction de tri par date d'upload de livre
+    public function findAllOrderByDateUpload()
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.dateUploadLivre', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllOrderByAuteur()
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.auteurLivre', 'auteur')
+            ->orderBy('auteur.nomUser', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Fonction de tri par catégorie de livre
+    public function findAllOrderByCategorie()
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.categorieLivre', 'categorie')
+            ->orderBy('categorie.nomCategorie', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Fonction de tri par prix de livre (en descendant)
+    public function findAllOrderByPrixDesc()
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.prixLivre', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
 //    /**
 //     * @return Livre[] Returns an array of Livre objects
 //     */
