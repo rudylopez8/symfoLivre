@@ -28,7 +28,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encodage du mot de passe avant de le sauvegarder dans la base de données
-                $user->setPasswordUser($form->get('passwordUser')->getData());
+                $user->setPassword($form->get('password')->getData());
                        // Utilisez persist pour préparer l'entité à être persistée
                        $em->persist($user);
                        // Utilisez flush pour effectivement enregistrer l'entité en base de données

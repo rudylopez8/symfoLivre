@@ -23,7 +23,7 @@ class UserType extends AbstractType
         $builder
             ->add('nomUser')
             ->add('mailUser')
-            ->add('passwordUser', PasswordType::class)
+            ->add('password', PasswordType::class)
             ->add('roleUser');
     }
     public function configureOptions(OptionsResolver $resolver): void

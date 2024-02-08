@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $mailUser = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $passwordUser = null;
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     private ?string $roleUser = null;
@@ -43,11 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?UserPasswordHasherInterface $passwordHasher = null;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->livres = new ArrayCollection();
-        $this->passwordHasher = $passwordHasher;
-    }
 
     public function getId(): ?int
     {
@@ -78,15 +73,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPasswordUser(): ?string
+    public function getpassword(): ?string
     {
-        return $this->passwordUser;
+        return $this->password;
     }
 
-    public function setPasswordUser(string $password): void
+    public function setpassword(string $password): self
     {
-        $hashedPassword = $this->passwordHasher->hashPassword($this, $password);
-        $this->passwordUser = $hashedPassword;
+        #$hashedPassword = $this->passwordHasher->hashPassword($this, $password);
+        $this->password = $password;
+        return $this;
     }
 
     public function getRoleUser(): ?string
@@ -148,10 +144,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->mailUser;
     }
 
-    public function getPassword(): ?string
+    /*public function getPassword(): ?string
     {
-        return $this->passwordUser;
-    }
+        return $this->password;
+    }*/
 
     public function getSalt(): ?string
     {

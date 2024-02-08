@@ -26,12 +26,24 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_user_new')]
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
 
+        $user= new User();
+        $plaintextPassword = "";
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
+
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            #$plaintextPassword
+            $password
+        );
+        $user->setPassword($hashedPassword);
+
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($user);
@@ -63,8 +75,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Hachage du mot de passe s'il a été changé
-            if ($form->get('plainPassword')->getData()) {
-                $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+            if ($form->get('password')->getData()) {
+                $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
             }
 
             $entityManager->flush();
@@ -86,12 +98,12 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);    
         if ($form->isSubmitted() && $form->isValid()) {
-            $newPassword = $form->get('passwordUser')->getData();
+            $newPassword = $form->get('password')->getData();
     
             if ($newPassword !== null) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
 //        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                $user->setPasswordUser($hashedPassword);
+                $user->setpassword($hashedPassword);
 
             }
     
