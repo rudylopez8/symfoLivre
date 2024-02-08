@@ -22,7 +22,7 @@ class LivreFixtures extends Fixture
             $user
                 ->setNomUser($faker->lastName())
                 ->setMailUser($faker->word())
-                ->setPasswordUser($faker->word())
+                ->setpassword($faker->word())
                 ->setRoleUser($faker->word());
             $manager->persist($user);
         }
