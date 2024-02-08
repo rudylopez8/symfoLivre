@@ -37,6 +37,7 @@
                             <td>
                                 <a href="{{ path('app_user_show', {'id': user.id}) }}"  class="btn btn-primary" >afficher /</a>
                                                     <th><a href="{{path('app_user_edit', {'id': user.id})}}"  class="btn btn-dark"> Editer</a>  </th>
+                                                    <th><a href="{{path('login_test')}}"  class="btn btn-dark"> Login test</a>  </th>
 
                                     <th>{{ include('user/_delete_form.html.twig') }}   </th>
                             </td>
