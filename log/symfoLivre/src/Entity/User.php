@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Assert\EqualTo;
+//use Assert\EqualTo;
 use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use UserPasswordHasherAwareTrait;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('mailUser', message: "Mail deja utilisé")]
+//#[UniqueEntity('mailUser', message: "Mail deja utilisé")]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 

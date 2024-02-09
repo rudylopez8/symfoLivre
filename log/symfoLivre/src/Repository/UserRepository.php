@@ -20,6 +20,7 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
     public function findAllOrderByUsername()
     {
         return $this->createQueryBuilder('u')
@@ -41,6 +42,19 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('role', $role)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param string $mailUser
+     * @return User|null
+     */
+    public function findOneByMailUser(string $mailUser): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.mailUser = :mailUser')
+            ->setParameter('mailUser', $mailUser)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 

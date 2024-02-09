@@ -3,9 +3,8 @@
 
 {% block body %}
 {% if app.user %}
-    Bonjour, {{ app.user.getNomUser() }}
+    Bonjour, {{ app.session.get('user_name') }}
     <a href="{{ path('app_logout') }}">Déconnexion</a>
 {% endif %}
-    <a href="{{ path('app_logout') }}">Déconnexion</a>
 
 {% endblock %}

@@ -31,7 +31,7 @@ class UserController extends AbstractController
     {
         $user = new User($passwordHasher); // Fournir le service UserPasswordHasherInterface ici
 
-        $plaintextPassword = ""; // Peut-être que vous vouliez utiliser cette variable?
+        $plaintextPassword = ""; 
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);

@@ -18,6 +18,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Form\LoginType;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 class RegistrationController extends AbstractController
 {
@@ -41,10 +43,11 @@ class RegistrationController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, SessionInterface $session, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Si l'utilisateur est déjà connecté, le rediriger vers la page d'accueil
         if ($this->getUser()) {
@@ -58,26 +61,28 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Recherche de l'utilisateur en base de données
-            $userRepository = $this->getDoctrine()->getRepository(User::class);
+            $userRepository = $em->getRepository(User::class);
             $existingUser = $userRepository->findOneBy(['mailUser' => $user->getMailUser()]);
-
-            if (!$existingUser || !$this->get('security.password_encoder')->isPasswordValid($existingUser, $user->getPasswordUser())) {
+//            var_dump($existingUser); // Ajoutez ceci pour voir les détails de l'utilisateur trouvé
+            if (!$existingUser || !$passwordHasher->isPasswordValid($existingUser, $user->getpassword())) {
                 // Erreur : mauvais email ou mot de passe
                 $this->addFlash('error', 'Identifiants incorrects.');
                 return $this->redirectToRoute('app_login');
             }
-
+            var_dump($existingUser->getRoles()); // Ajoutez ceci pour voir les rôles de l'utilisateur
             // Création d'un token d'authentification
             $token = new UsernamePasswordToken($existingUser, null, 'main', $existingUser->getRoles());
 
             // Authentification de l'utilisateur
             $this->get('security.token_storage')->setToken($token);
-
+        // Stockez le nom de l'utilisateur dans la variable de session
+        $session->set('user_name', $existingUser->getNomUser());
+        var_dump($session->get('user_name')); // Ajoutez ceci pour voir le nom d'utilisateur stocké 
             // Redirection vers la page d'accueil
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('registration/login.html.twig', [
             'form'  => $form->createView(),
             'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
@@ -88,5 +93,7 @@ class RegistrationController extends AbstractController
     public function logout(): void
     {
         // La fonction de déconnexion est gérée automatiquement par Symfony
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+
     }
 }
