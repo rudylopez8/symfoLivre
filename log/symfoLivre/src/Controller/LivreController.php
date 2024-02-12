@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Form\UploadFileType;
 
 class LivreController extends AbstractController
 {
@@ -44,6 +45,32 @@ class LivreController extends AbstractController
         return $this->renderForm('livre/new.html.twig', [
             'livre' => $livre,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/uploadLivre', name: 'app_uploadLivre', methods: ['GET', 'POST'])]
+    public function uploadFile(Request $request): Response
+    {
+        $form = $this->createForm(UploadFileType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+
+            // Gérez le téléversement du fichier ici
+            // Exemple : déplacez le fichier vers un dossier spécifique
+            $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/dataLivre';
+            $file->move($uploadsDirectory, $file->getClientOriginalName());
+
+            // Ajoutez d'autres traitements si nécessaire
+
+            $this->addFlash('success', 'Le fichier a été téléversé avec succès.');
+            return $this->redirectToRoute('app_uploadLivre');
+        }
+
+        return $this->render('livre/testUpload.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
