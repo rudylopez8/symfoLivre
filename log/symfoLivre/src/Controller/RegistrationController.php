@@ -19,6 +19,11 @@ use App\Form\LoginType;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+//use Symfony\Component\Routing\Attribute\Route;
+
 
 
 class RegistrationController extends AbstractController
@@ -44,56 +49,36 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/login", name="app_login")
-     */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils, SessionInterface $session, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
-    {
-        // Si l'utilisateur est déjà connecté, le rediriger vers la page d'accueil
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
-        }
 
-        $user = new User();
-        $form = $this->createForm(LoginType::class, $user);
+//    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+//    {
+//        $user = new User();
+//        $form = $this->createForm(RegistrationFormType::class, $user);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//             encode the plain password
+//            $user->setPassword(
+//                $userPasswordHasher->hashPassword(
+//                    $user,
+//                    $form->get('plainPassword')->getData()
+//                )
+//            );
+//
+//            $entityManager->persist($user);
+//            $entityManager->flush();
+//            // do anything else you need here, like send an email
+//
+//            return $userAuthenticator->authenticateUser(
+//                $user,
+//                $authenticator,
+//                $request
+//            );
+//        }
+//
+//        return $this->render('registration/register.html.twig', [
+//            'registrationForm' => $form->createView(),
+//        ]);
+//    }
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Recherche de l'utilisateur en base de données
-            $userRepository = $em->getRepository(User::class);
-            $existingUser = $userRepository->findOneBy(['mailUser' => $user->getMailUser()]);
-//            var_dump($existingUser); // Ajoutez ceci pour voir les détails de l'utilisateur trouvé
-            if (!$existingUser || !$passwordHasher->isPasswordValid($existingUser, $user->getpassword())) {
-                // Erreur : mauvais email ou mot de passe
-                $this->addFlash('error', 'Identifiants incorrects.');
-                return $this->redirectToRoute('app_login');
-            }
-            var_dump($existingUser->getRoles()); // Ajoutez ceci pour voir les rôles de l'utilisateur
-            // Création d'un token d'authentification
-            $token = new UsernamePasswordToken($existingUser, null, 'main', $existingUser->getRoles());
-
-            // Authentification de l'utilisateur
-            $this->get('security.token_storage')->setToken($token);
-        // Stockez le nom de l'utilisateur dans la variable de session
-        $session->set('user_name', $existingUser->getNomUser());
-        var_dump($session->get('user_name')); // Ajoutez ceci pour voir le nom d'utilisateur stocké 
-            // Redirection vers la page d'accueil
-            return $this->redirectToRoute('app_home');
-        }
-
-        return $this->render('registration/login.html.twig', [
-            'form'  => $form->createView(),
-            'error' => $authenticationUtils->getLastAuthenticationError(),
-        ]);
-    }
-        /**
-     * @Route("/logout", name="app_logout")
-     */
-    public function logout(): void
-    {
-        // La fonction de déconnexion est gérée automatiquement par Symfony
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-
-    }
 }

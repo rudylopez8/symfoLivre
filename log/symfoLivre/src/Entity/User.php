@@ -15,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use UserPasswordHasherAwareTrait;
 
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 //#[UniqueEntity('mailUser', message: "Mail deja utilisé")]
 
