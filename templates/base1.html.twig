@@ -8,7 +8,7 @@
 
 		<title>
 			{% block title %}
-				SymfoLivre
+				Iplkt-initio
 			{% endblock %}
 		</title>
 
@@ -40,22 +40,9 @@
 		{% endblock %}
 
 	</head>
-	<body class="home"> 
-		    <!-- Header-->
-    {% include("header/header.html.twig")%}
-	{% include("menus/navigation.html.twig")%}
-	
-	{% block body %}
-
-
-
-    <!-- NavBar-->
-
+	<body class="home"> {% block body %}
         
-     
+    
     {% endblock %}
-
-	
-	{% include("footer/footer.html.twig")%}   
-	</body>
+		</body>
 	</html>

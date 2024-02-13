@@ -1,0 +1,14 @@
+{# templates/your_template/upload.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Téléversement de fichier{% endblock %}
+
+{% block body %}
+    <h1>Téléversement de fichier</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Téléverser</button>
+    {{ form_end(form) }}
+{% endblock %}
