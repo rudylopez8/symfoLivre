@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class UserType extends AbstractType
 {
@@ -22,8 +23,8 @@ class UserType extends AbstractType
                     'User' => 'ROLE_USER',
                     'Admin' => 'ROLE_ADMIN',
                 ],
-                'multiple' => true,
-                'expanded' => true,
+                    'multiple' => true,
+                    'expanded' => false,
             ])
             ->add('password')
         ;
@@ -36,3 +37,4 @@ class UserType extends AbstractType
         ]);
     }
 }
+//vérifier la structure de la requête POST qui est envoyée lorsque vous soumettez le formulaire d'édition.

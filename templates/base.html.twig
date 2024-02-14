@@ -43,8 +43,13 @@
 	<body class="home"> 
 		    <!-- Header-->
     {% include("header/header.html.twig")%}
-	{% include("menus/navigation.html.twig")%}
-	
+    {% if app.user %}
+		{% include("menus/navigation.html.twig")%}
+        {% if 'ROLE_ADMIN' in app.user.getRoles() %}
+            {% include("menus/navigation_admin.html.twig")%}
+        {% endif %}
+    {% endif %}
+
 	{% block body %}
 
 

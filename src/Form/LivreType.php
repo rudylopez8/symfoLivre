@@ -9,7 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class LivreType extends AbstractType
 {
@@ -17,30 +17,24 @@ class LivreType extends AbstractType
     {
         $builder
             ->add('titreLivre')
-            ->add('fichierLivre')
+            ->add('fichierLivre', FileType::class, [
+                'label' => 'Sélectionnez un fichier (zip ou 7zip)',
+                'required' => true,
+            ])
             ->add('resumeLivre')
             ->add('prixLivre')
-
             ->add('dateUploadLivre')
             ->add('auteurLivre', EntityType::class, [
-                'class' => 'App\Entity\User', // le chemin réel de User
-                'choice_label' => 'nomUser', // le champ à afficher
+                'class' => 'App\Entity\User',
+                'choice_label' => 'nomUser',
                 'multiple' => false,
                 'expanded' => false,
             ])
             ->add('categorieLivre', EntityType::class, [
-//                 Label du champ    
-                'label'  => 'Categorie',
+                'label' => 'Categorie',
                 'placeholder' => 'Categorie',
-        
-                // looks for choices from this entity
                 'class' => Categorie::class,
-            
-                // Sur quelle propriete je fais le choix
                 'choice_label' => 'nomCategorie',
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                //'expanded' => true,
             ])
         ;
     }

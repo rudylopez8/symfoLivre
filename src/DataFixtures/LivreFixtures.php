@@ -20,11 +20,13 @@ class LivreFixtures extends Fixture
         for ($i = 0; $i < 5; $i++) {
             $user = new User();
             $password = "password".$i;
+//            $roleUser = new Role('ROLE_USER');
             $user
                 ->setNomUser($faker->lastName())
                 ->setEmail("user{$i}@gmail.com")
                 ->setPassword($password)        
-                ->setRoles(["ROLE_USER"]);
+//                ->setRoles(['ROLES_USER']);
+;
             $manager->persist($user);
         }
 

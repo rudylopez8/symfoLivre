@@ -76,7 +76,12 @@ class UserController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-            $entityManager->flush();
+        //rôle du formulaire
+//        $roles = [$form->get('roles')->getData()];
+//        $user->setRoles([$roles]);
+
+
+        $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
