@@ -10,17 +10,23 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class LivreType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titreLivre')
-            ->add('fichierLivre', FileType::class, [
-                'label' => 'Sélectionnez un fichier (zip ou 7zip)',
-                'required' => true,
-            ])
+            ->add('titreLivre')            
+//            ->add('fichierLivre', FileType::class, [
+//                'label' => 'Sélectionnez un fichier (zip ou 7zip)',
+//                'required' => true,
+//                'data' => $options['data']['fichierLivre'] ?? null,
+//            ])
+    ->add('fichierLivre', TextType::class, [
+        'label' => 'Sélectionnez un fichier (zip ou 7zip)',
+        'required' => true,
+    ])                                  
             ->add('resumeLivre')
             ->add('prixLivre')
             ->add('dateUploadLivre')

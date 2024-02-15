@@ -44,7 +44,6 @@ class LivreController extends AbstractController
             $file->move($uploadsDirectory, $file->getClientOriginalName());
             $this->addFlash('success', 'Le fichier a été téléversé avec succès.');
     
-            // Maintenant que le fichier est téléversé, nous pouvons le stocker dans l'entité Livre
             $livre->setFichierLivre($file->getClientOriginalName());
     
             $entityManager->persist($livre);
@@ -99,10 +98,15 @@ class LivreController extends AbstractController
     #[Route('/{id}/app_livre_edit', name: 'app_livre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(LivreType::class, $livre);
+//        $form = $this->createForm(LivreType::class, $livre, [
+//            'data' => ['fichierLivre' => $livre->getFichierLivre()], // Passer les données initiales
+//        ]);
+        $form = $this->createForm(LivreType::class, $livre);      
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $fichierLivre = $form->get('fichierLivre')->getData();
+            $livre->setFichierLivre($fichierLivre);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_livre', [], Response::HTTP_SEE_OTHER);
