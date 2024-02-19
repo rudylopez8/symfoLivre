@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Form\UploadFileType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Security\Core\Security;
 
 class LivreController extends AbstractController
 {
@@ -29,15 +31,34 @@ class LivreController extends AbstractController
     }
 
     #[Route('/newLivre', name: 'app_livre_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $livre = new Livre();
     
         // Continuez avec le formulaire principal
-        $form = $this->createForm(LivreType::class, $livre);
+        $form = $this->createForm(LivreType::class, $livre, [
+            'file_constraints' => [
+                new File([
+                    'maxSize' => '800M', // taille
+                ]),
+            ],
+        ]);
+    
         $form->handleRequest($request);
     
+        // Vérifiez si l'utilisateur est connecté
+        $user = $security->getUser();
+    
+        if (!$user) {
+            // Redirigez ou traitez le cas où l'utilisateur n'est pas connecté
+            return $this->redirectToRoute('/');
+        }
+    
+        // Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+            // Associez l'utilisateur actuel au livre
+            $livre->setAuteurLivre($user);
+    
             $file = $form->get('fichierLivre')->getData();
     
             $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/dataLivre';
@@ -58,7 +79,6 @@ class LivreController extends AbstractController
         ]);
     }
         
-
     #[Route('/uploadLivre', name: 'app_uploadLivre', methods: ['GET', 'POST'])]
     public function uploadFile(Request $request): Response
     {
@@ -93,7 +113,22 @@ class LivreController extends AbstractController
             'livre' => $livre,
         ]);
     }
+
+    #[Route('/{id}/livre_download', name: 'livre_download', methods: ['GET'])]
+    public function download(Livre $livre): Response
+    {
+        $fileName = $livre->getFichierLivre();
     
+        // Générez la réponse pour le téléchargement
+        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/txt'); // Mettez le type de fichier correct
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+        $response->setContent(file_get_contents($this->getParameter('kernel.project_dir') . '/public/dataLivre/' . $fileName));
+    
+        return $response;
+    }
+    
+
     #[Route('/{id}/app_livre_edit', name: 'app_livre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {

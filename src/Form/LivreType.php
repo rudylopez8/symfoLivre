@@ -25,6 +25,7 @@ class LivreType extends AbstractType implements EventSubscriberInterface
             ->add('fichierLivre', FileType::class, [
                 'label' => 'Sélectionnez un fichier (zip ou 7zip)',
                 'required' => true,
+                'constraints' => $options['file_constraints'],
             ])
 //    ->add('fichierLivre', TextType::class, [
 //        'label' => 'Sélectionnez un fichier (zip ou 7zip)',
@@ -33,12 +34,12 @@ class LivreType extends AbstractType implements EventSubscriberInterface
             ->add('resumeLivre')
             ->add('prixLivre')
             ->add('dateUploadLivre')
-            ->add('auteurLivre', EntityType::class, [
-                'class' => 'App\Entity\User',
-                'choice_label' => 'nomUser',
-                'multiple' => false,
-                'expanded' => false,
-            ])
+//            ->add('auteurLivre', EntityType::class, [
+//                'class' => 'App\Entity\User',
+//                'choice_label' => 'nomUser',
+//                'multiple' => false,
+//                'expanded' => false,
+//            ])
             ->add('categorieLivre', EntityType::class, [
                 'label' => 'Categorie',
                 'placeholder' => 'Categorie',
@@ -75,6 +76,7 @@ class LivreType extends AbstractType implements EventSubscriberInterface
     {
         $resolver->setDefaults([
             'data_class' => Livre::class,
+            'file_constraints' => [],
         ]);
     }
 }
