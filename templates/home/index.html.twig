@@ -1,11 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-user.html.twig' %}
 
 
 {% block body %}
-    {% if app.user %}
-        helo {{ app.user.getNomUser }}, <a href="{{ path('app_logout') }}">Logout</a>
-    {% endif %}
-
-
-        <h3><a href="{{ path('app_login') }}">Connexion </a></h3>
+    
+    {% include("main/main.html.twig")%}    
 {% endblock %}
