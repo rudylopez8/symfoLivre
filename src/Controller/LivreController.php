@@ -93,32 +93,51 @@ class LivreController extends AbstractController
             'livre' => $livre,
         ]);
     }
-
-
+    
     #[Route('/{id}/app_livre_edit', name: 'app_livre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {
-//        $form = $this->createForm(LivreType::class, $livre, [
-//            'data' => ['fichierLivre' => $livre->getFichierLivre()], // Passer les données initiales
-//        ]);
-        $form = $this->createForm(LivreType::class, $livre);      
-        $form->handleRequest($request);
+        $form = $this->createForm(LivreType::class, $livre);
+    
+        // Vérifiez si la requête est de type POST
+        if ($request->isMethod('POST')) {
+            // Récupérez le fichier soumis
+            $nouveauFichier = $request->files->get('livre')->getFichierLivre();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fichierLivre = $form->get('fichierLivre')->getData();
-            $livre->setFichierLivre($fichierLivre);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_livre', [], Response::HTTP_SEE_OTHER);
+            // Si un nouveau fichier a été soumis
+            if ($nouveauFichier) {
+                // Supprimer le fichier précédent s'il existe
+                $ancienFichier = $livre->getFichierLivre();
+                $ancienChemin = $this->getParameter('kernel.project_dir') . '/public/dataLivre/' . $ancienFichier;
+    
+                if (file_exists($ancienChemin)) {
+                    unlink($ancienChemin);
+                }
+    
+                // Déplacez le nouveau fichier vers le répertoire approprié
+                $nouveauFichier->move($this->getParameter('kernel.project_dir') . '/public/dataLivre', $nouveauFichier->getClientOriginalName());
+    
+                // Mettez à jour la propriété fichierLivre avec le nouveau nom de fichier
+                $livre->setFichierLivre($nouveauFichier->getClientOriginalName());
+            }
+    
+            // Remplissez le formulaire avec les données mises à jour
+        $form->submit($request->request->get('livre'));
+    
+            // Vérifiez si le formulaire est valide avant de mettre à jour l'entité
+            if ($form->isValid()) {
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('app_livre', [], Response::HTTP_SEE_OTHER);
+            }
         }
-
+    
         return $this->renderForm('livre/edit.html.twig', [
             'livre' => $livre,
             'form' => $form,
         ]);
     }
-
-
+                
     #[Route('/{id}/livre_sup', name: 'livre_sup', methods:['POST'])]
     public function suppr(Request $request, Livre $livre, LivreRepository $livreRepository, EntityManagerInterface $manager): Response
         {

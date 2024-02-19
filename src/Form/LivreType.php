@@ -11,22 +11,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class LivreType extends AbstractType
+//class LivreType extends AbstractType
+class LivreType extends AbstractType implements EventSubscriberInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('titreLivre')            
-//            ->add('fichierLivre', FileType::class, [
-//                'label' => 'Sélectionnez un fichier (zip ou 7zip)',
-//                'required' => true,
-//                'data' => $options['data']['fichierLivre'] ?? null,
-//            ])
-    ->add('fichierLivre', TextType::class, [
-        'label' => 'Sélectionnez un fichier (zip ou 7zip)',
-        'required' => true,
-    ])                                  
+            ->add('fichierLivre', FileType::class, [
+                'label' => 'Sélectionnez un fichier (zip ou 7zip)',
+                'required' => true,
+            ])
+//    ->add('fichierLivre', TextType::class, [
+//        'label' => 'Sélectionnez un fichier (zip ou 7zip)',
+//        'required' => true,
+//    ])                                  
             ->add('resumeLivre')
             ->add('prixLivre')
             ->add('dateUploadLivre')
@@ -43,6 +46,29 @@ class LivreType extends AbstractType
                 'choice_label' => 'nomCategorie',
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            FormEvents::PRE_SET_DATA => 'onPreSetData',
+        ];
+    }
+
+    public function onPreSetData(FormEvent $event): void
+    {
+        $form = $event->getForm();
+        $livre = $event->getData();
+
+        // Si le Livre a un fichier, changez le champ en un champ texte au lieu d'un champ fichier
+        if ($livre && $livre->getFichierLivre()) {
+            $form->add('fichierLivre', TextType::class, [
+                'label' => 'Nom du fichier',
+                'required' => false,
+                'mapped' => false, // Ne pas mapper ce champ à l'entité
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
