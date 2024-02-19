@@ -40,14 +40,17 @@
 		{% endblock %}
 
 	</head>
-
-	
-
 	<body class="home"> 
 		    <!-- Header-->
- {% include("menus/navigation.html.twig")%}
-	{% include("header/header.html.twig")%}
-		
+    {% include("header/header.html.twig")%}
+    {% if app.user %}
+		{% include("menus/navigation.html.twig")%}
+        {% if 'ROLE_ADMIN' in app.user.getRoles() %}
+            {% include("menus/navigation_admin.html.twig")%}
+			{% else %}
+				
+        {% endif %}
+    {% endif %}
 
 	{% block body %}
 
