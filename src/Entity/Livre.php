@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\LivreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 class Livre
@@ -12,29 +13,37 @@ class Livre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['api'])]
     private ?string $titreLivre = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['api'])]
     private ?string $fichierLivre = null;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['api'])]
     private ?User $auteurLivre = null;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['api'])]
     private ?Categorie $categorieLivre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['api'])]
     private ?string $resumeLivre = null;
 
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?float $prixLivre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['api'])]
     private ?\DateTimeInterface $dateUploadLivre = null;
 
     public function getId(): ?int

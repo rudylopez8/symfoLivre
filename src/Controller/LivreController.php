@@ -19,14 +19,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Form\UploadFileType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
 
 class LivreController extends AbstractController
 {
     #[Route('/livre', name: 'app_livre')]
-    public function index(LivreRepository $livreRepository): Response
+    public function index(LivreRepository $livreRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $page = $request->query->getInt('page', 1);
+        $livres = $paginator->paginate(
+            $livreRepository->findAll(),
+            $page,
+            20 // Nombre d'éléments par page
+        );
+    
         return $this->render('livre/index.html.twig', [
-            'livres' => $livreRepository->findAll(),
+            'livres' => $livres,
         ]);
     }
 

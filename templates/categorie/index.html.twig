@@ -21,7 +21,7 @@
 						<tr>
 							<th>Id</th>
 							<th>nom</th>
-                            
+							<th>information</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -34,6 +34,9 @@
 								</td>
 								<td>
 									{{categorie.nomCategorie}}
+								</td>
+								<td>
+								{{categorie.informationCategorie}}
 								</td>
 								<td>
                                     <th><a href="{{path('categorie_edit', {'id': categorie.id} ) }}" class="btn btn-dark"> Edit</a> </th>

@@ -15,20 +15,24 @@ use App\Security\UserAuthenticator;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 
-#[Route('/user')]
+//#[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/user', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -52,19 +56,26 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -90,16 +101,21 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 }

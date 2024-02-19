@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    {% if app.user %}
+        helo {{ app.user.getNomUser }}, <a href="{{ path('app_logout') }}">Logout</a>
+    {% endif %}
+
+
+        <h1>Gestion Admin</h1>
+    <a href="{{ path('app_user_index') }}">Gérer les utilisateurs</a><br>
+    <a href="{{ path('app_livre') }}">Gérer les livres</a><br>
+    <a href="{{ path('app_categorie') }}">Gérer les categories</a>
+
+
+{% endblock %}
