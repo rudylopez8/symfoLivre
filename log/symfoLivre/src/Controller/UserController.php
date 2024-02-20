@@ -9,121 +9,126 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Security\UserAuthenticator;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Core\Security;
 
 
-#[Route('/user')]
+//#[Route('/user')]
 class UserController extends AbstractController
 {
-
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/user', name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 
-    #[Route('/new', name: 'app_user_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    #[Route('/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
-        $user = new User($passwordHasher); // Fournir le service UserPasswordHasherInterface ici
-
-        $plaintextPassword = ""; 
-
+//        if ($this->isGranted('ROLE_ADMIN')) {
+        $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-    
-        $password = ""; // Définir une valeur pour $password
-    
-        $hashedPassword = $passwordHasher->hashPassword(
-            $user,
-            #$plaintextPassword
-            $password
-        );
-        $user->setPassword($hashedPassword);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
+
             $entityManager->persist($user);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('user/new.html.twig', [
+        return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
-
-    #[Route('/{id}/app_user_show', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    #[Route('user_profile', name: 'app_user_profile', methods: ['GET'])]
+    public function showProfile(Security $security): Response
     {
+        $user = $security->getUser();
+    
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+    
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
-
-    #[Route('/{id}/app_user_edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    #[Route('/user/{id}', name: 'app_user_show', methods: ['GET'])]
+    public function show(User $user): Response
     {
-        // Création du formulaire et traitement des données
+//        if ($this->isGranted('ROLE_ADMIN')) {
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
+//        }
+//  return $this->render('security/login.html.twig');
+    }
+
+    #[Route('/user/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    {
+//        if ($this->isGranted('ROLE_ADMIN')) {
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hachage du mot de passe s'il a été changé
-            if ($form->get('password')->getData()) {
-                $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
-            }
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
+        //rôle du formulaire
+//        $roles = [$form->get('roles')->getData()];
+//        $user->setRoles([$roles]);
 
-            $entityManager->flush();
 
-            $this->addFlash('success', 'Utilisateur mis à jour avec succès !');
+        $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('user/edit.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
+//        }
+//  return $this->render('security/login.html.twig');
     }
-    public function edit2(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
-    {
-    
-        $form = $this->createForm(UserType::class, $user, ['password_hasher' => $passwordHasher]);
 
-        $form->handleRequest($request);    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newPassword = $form->get('password')->getData();
-    
-            if ($newPassword !== null) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
-//        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                $user->setpassword($hashedPassword);
-
-            }
-    
-            $entityManager->flush();
-    
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-    
-        return $this->renderForm('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-    #[Route('/{id}/app_user_delete', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/user/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+//        if ($this->isGranted('ROLE_ADMIN')) {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+//        }
+//  return $this->render('security/login.html.twig');
     }
 }

@@ -8,10 +8,10 @@
 			<ul class="nav navbar-nav">
 
 				<li class="nav-item">
-					<a class="nav-link" href="#">accueil</a>
+					<a class="nav-link" href={{ path('app_default0')}}>accueil</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('home')}}">A propos</a>
+					<a class="nav-link" href="{{ path('app_apropos')}}">A propos</a>
 				</li>
 
 				<li class="nav-item">
@@ -19,14 +19,16 @@
 						mon panier
 					</a>
 				</li>
+
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('home')}}">
-						mon compte
+					<a class="nav-link" href="{{ path('app_livre')}}">
+						mes livres déjà télécharger
 					</a>
 				</li>
+
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path('home')}}">
-						mes livres déjà télécharger
+					<a class="nav-link" href="{{ path('app_admin')}}">
+						Admin
 					</a>
 				</li>
 

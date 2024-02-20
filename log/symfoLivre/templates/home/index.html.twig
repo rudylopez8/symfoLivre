@@ -1,26 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-user.html.twig' %}
 
 
 {% block body %}
-    {% if app.user %}
-        <div class="mb-3">
-            Welcome, {{ app.user.nomUser }}! <!-- Remplacez "nomUser" par le nom du champ dans votre entité User -->
-        </div>
-        <div>
-            Email: {{ app.user.mailUser }}
-        </div>
-        <div>
-            Role: {{ app.user.roleUser }}
-        </div>
-    {% endif %}
-{% if app.user %}
-    Bonjour, {{ app.session.get('user_name') }}
-    <a href="{{ path('app_logout') }}">Déconnexion</a>
-{% endif %}
-{% if app.user %}
-    Bonjour, {{ app.session.get('user_name') }}
-    <a href="{{ path('app_logout') }}">Déconnexion</a>
-{% endif %}
-        <h3><a href="{{ path('app_login') }}">Connexion </a></h3>
-
+    
+    {% include("main/main.html.twig")%}    
 {% endblock %}

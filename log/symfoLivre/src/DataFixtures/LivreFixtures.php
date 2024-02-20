@@ -19,11 +19,14 @@ class LivreFixtures extends Fixture
         // Créer des utilisateurs
         for ($i = 0; $i < 5; $i++) {
             $user = new User();
+            $password = "password".$i;
+//            $roleUser = new Role('ROLE_USER');
             $user
                 ->setNomUser($faker->lastName())
-                ->setMailUser($faker->word())
-                ->setpassword($faker->word())
-                ->setRoleUser($faker->word());
+                ->setEmail("user{$i}@gmail.com")
+                ->setPassword($password)        
+//                ->setRoles(['ROLES_USER']);
+;
             $manager->persist($user);
         }
 

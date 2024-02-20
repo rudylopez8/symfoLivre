@@ -2,48 +2,41 @@
 
 namespace App\Entity;
 
-//use Assert\EqualTo;
-use App\Entity\Livre;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use UserPasswordHasherAwareTrait;
-
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-//#[UniqueEntity('mailUser', message: "Mail deja utilisé")]
-
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
-
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 64)]
+    #[Groups(['api'])]
     private ?string $nomUser = null;
 
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $mailUser = null;
+    #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['api'])]
+    private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
+    #[Groups(['api'])]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    #[Groups(['api'])]
     private ?string $password = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $roleUser = null;
-
-    #[ORM\OneToMany(mappedBy: 'auteurLivre', targetEntity: Livre::class)]
-    private Collection $livres;
-
-    private ?UserPasswordHasherInterface $passwordHasher = null;
-
 
     public function getId(): ?int
     {
@@ -62,103 +55,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMailUser(): ?string
+    public function getEmail(): ?string
     {
-        return $this->mailUser;
+        return $this->email;
     }
 
-    public function setMailUser(string $mailUser): static
+    public function setEmail(string $email): static
     {
-        $this->mailUser = $mailUser;
-
-        return $this;
-    }
-
-    public function getpassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setpassword(string $password): self
-    {
-        #$hashedPassword = $this->passwordHasher->hashPassword($this, $password);
-        $this->password = $password;
-        return $this;
-    }
-
-    public function getRoleUser(): ?string
-    {
-        return $this->roleUser;
-    }
-
-    public function setRoleUser(string $roleUser): static
-    {
-        $this->roleUser = $roleUser;
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Livre>
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
      */
-    public function getLivres(): Collection
-    {
-        return $this->livres;
-    }
-
-    public function addLivre(Livre $livre): static
-    {
-        if (!$this->livres->contains($livre)) {
-            $this->livres->add($livre);
-            $livre->setAuteurLivre($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLivre(Livre $livre): static
-    {
-        if ($this->livres->removeElement($livre)) {
-            // set the owning side to null (unless already changed)
-            if ($livre->getAuteurLivre() === $this) {
-                $livre->setAuteurLivre(null);
-            }
-        }
-
-        return $this;
-    }
-    public function getRoles(): array
-    {
-        return [$this->roleUser];
-    }
-
-    public function eraseCredentials(): void
-    {
-        // Cette méthode est appelée lorsqu'un mot de passe en texte brut n'est plus nécessaire
-        // Vous pouvez y ajouter du code pour réinitialiser des informations sensibles du mot de passe
-        // Par exemple, si vous avez stocké un mot de passe en texte brut, vous pouvez le réinitialiser ici
-    }
-    public function getUsername(): string
-    {
-        // Dans Symfony 5.3 et versions ultérieures, getUserIdentifier remplace getUsername
-        // Pour garantir la compatibilité, vous pouvez renvoyer l'e-mail ici
-        return $this->mailUser;
-    }
-
-    /*public function getPassword(): ?string
-    {
-        return $this->password;
-    }*/
-
-    public function getSalt(): ?string
-    {
-        // Vous pouvez laisser cette méthode vide, car les mots de passe sont stockés de manière sécurisée
-        // Et dans la plupart des cas, vous n'avez pas besoin d'utiliser une "salt" séparée
-        return null;
-    }
     public function getUserIdentifier(): string
     {
-        return $this->mailUser;
+        return (string) $this->email;
     }
 
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
 }
