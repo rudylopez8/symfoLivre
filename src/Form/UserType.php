@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
@@ -28,8 +29,9 @@ class UserType extends AbstractType
                     'multiple' => true,
                     'expanded' => false,
             ])
-            ->add('password')
-        ;
+            ->add('password', PasswordType::class, [
+                'empty_data' => '', // Définir une valeur par défaut vide pour le champ
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
