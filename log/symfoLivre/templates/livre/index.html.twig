@@ -1,0 +1,76 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}Hello LivreController!
+{% endblock %}
+
+{% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+	</style>
+
+	<div class="example-wrapper">
+		<h1>
+			livre_index! ✅</h1>
+		<div
+			class="container">
+			<!-- User main content -->
+			<user class="col-md-12 maincontent">
+				<div class="container">
+					<div class="row">
+						<h3>Les livres</h3>
+						<hr style="width:100%; height:10px; background-color:#1B4F72 ">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>titre</th>
+									<th>auteur</th>
+									<th>actions</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								{% for livre in livres %}
+									<tr>
+										<td>{{ livre.id }}</td>
+										<td>{{ livre.titreLivre }}</td>
+										<td>{{ livre.auteurLivre.nomUser }}</td>
+										<td>
+
+											 {% if app.user %}
+                                <a href="{{ path('livre_show', {'id': livre.id}) }}"  class="btn btn-success" >shower</a>
+                                <a href="{{ path('livre_download', {'id': livre.id}) }}"  class="btn btn-success" ></a>
+<th>{{ include('livre/_delete_form.html.twig') }}   </th>
+
+                                                {#<a href="{{ path('livre_show', {'id': livre.id}) }}" class="btn btn-success">editer</a>#}
+                                                {% endif %}
+										</td>
+										{#{% if app.user %} <th>{{ include('livre/_delete_form.html.twig') }}</th> {% endif %}#}
+									</tr>
+								</td>
+							</tbody>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="6">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{{ knp_pagination_render(livres) }} {# Affiche les boutons de pagination #}
+		</div>
+	</div>
+</div>
+
+
+<a href="{{ path('app_livre_new') }}" class="btn btn-info">
+	Creer un livre</a></div>{% endblock %}

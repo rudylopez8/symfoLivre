@@ -1,0 +1,58 @@
+@startuml
+skinparam actorStyle actor
+left to right direction
+actor Auteur as Auteur
+actor Lecteur as Lecteur
+actor Administrateur as Admin
+
+rectangle "Cas d'Utilisation" {
+  (Authentifier)
+  (Gérer Utilisateurs)
+  (Gérer Livres)
+  (Consulter Livres)
+  (Barre de Recherche)
+  (Gérer Son Compte)
+  (Gérer Les Membres)
+
+
+Lecteur --> (Authentifier)
+Lecteur --> (Consulter Livres)
+Lecteur --> (Gérer Son Compte)
+
+/' Auteur --> (Authentifier)  
+Auteur --> (Consulter Livres)
+Auteur --> (Gérer Son Compte) '/
+Auteur --> (Gérer Livres)
+Auteur -down-|> Lecteur
+
+/' Admin --> (Authentifier)
+Admin --> (Consulter Livres)
+Admin --> (Gérer Son Compte) '/
+
+Admin --> (Gérer Utilisateurs)
+Admin --> (Gérer Livres)
+Admin --> (Gérer Les Membres)
+
+Admin -down-|> Auteur 
+
+(Authentifier) -> (Accéder au Site)
+/'(Authentifier) .>(Consulter Livres)
+(Authentifier) .> (Gérer Son Compte)
+(Authentifier) .> (Gérer Livres)
+(Authentifier) .> (Gérer Utilisateurs) '/
+
+/'(Authentifier) --> (Accès Non Autorisé) '/
+(Gérer Utilisateurs) --> (Créer Utilisateur)
+(Gérer Utilisateurs) --> (Modifier Utilisateur)
+(Gérer Utilisateurs) --> (Supprimer Utilisateur)
+(Gérer Utilisateurs) --> (Consulter Profil Utilisateur)
+(Consulter Livres) --> (Télécharger Livre)
+(Consulter Livres) --> (Lire Livre)
+(Gérer Livres) --> (Téléverser Livre)
+(Gérer Livres) --> (Supprimer Livre)
+(Barre de Recherche) --> (Trouver Livre)
+(Barre de Recherche) --> (Afficher Résultats)
+
+}
+
+@enduml
