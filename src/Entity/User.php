@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -111,6 +112,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function setPasswordAndHash(UserPasswordHasherInterface $passwordHasher, string $plainPassword): static
+    {
+        // Utiliser le service UserPasswordHasherInterface pour hacher le mot de passe
+        $hashedPassword = $passwordHasher->hashPassword($this, $plainPassword);
+
+        // Définir le mot de passe haché
+        $this->password = $hashedPassword;
+
+        return $this;
+    }
     /**
      * @see UserInterface
      */
@@ -119,4 +130,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+    public function addRole($role)
+    {
+        $this->roles[] = $role;
+    
+        if ($role === 'ROLE_AUTOR') {
+            $this->addRole('ROLE_USER');
+        }
+    
+        if ($role === 'ROLE_ADMIN') {
+            $this->addRole('ROLE_AUTOR');
+        }
+    
+        return $this;
+    }
+    
 }

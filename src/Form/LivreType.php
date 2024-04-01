@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 //class LivreType extends AbstractType
 class LivreType extends AbstractType implements EventSubscriberInterface
@@ -32,7 +33,14 @@ class LivreType extends AbstractType implements EventSubscriberInterface
 //        'required' => true,
 //    ])                                  
             ->add('resumeLivre')
-            ->add('prixLivre')
+//            ->add('prixLivre')
+            ->add('prixLivre', NumberType::class, [
+                'html5' => true,
+                'attr' => [
+                    'step' => '0.01', // Définissez la précision souhaitée
+                    'min' => '0.00',  // Définissez la valeur minimale si nécessaire
+                ],
+            ])
             ->add('dateUploadLivre')
 //            ->add('auteurLivre', EntityType::class, [
 //                'class' => 'App\Entity\User',

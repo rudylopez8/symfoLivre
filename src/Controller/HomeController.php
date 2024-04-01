@@ -23,5 +23,13 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    #[Route('/en_cour_de_dev', name: 'app_en_cour_de_dev')]
+    public function enCourDeDev(): Response
+    {
+        $message = "Cette fonctionnalité est en cours de développement.";
 
+        return $this->render('home/fonctionnalité_en_cour_de_dev.html.twig', [
+            'message' => $message,
+        ]);
+    }
 }

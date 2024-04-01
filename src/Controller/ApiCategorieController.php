@@ -29,7 +29,8 @@ class ApiCategorieController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $categorie = new Categorie();
-        $categorie->setNomCategorie($data['nom']); // Ajuster selon vos besoins
+        $categorie->setNomCategorie($data['nom']); 
+        $categorie->setInformationCategorie($data['info']); 
 
         $errors = $validator->validate($categorie);
 

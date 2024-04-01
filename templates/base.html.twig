@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,6 +46,15 @@
 	<body class="home"> 
 		    <!-- Header-->
  {% include("menus/navigation.html.twig")%}
+
+	{% if not app.user %}
+	<div class="mb-3">
+	<a href="{{ path('app_register') }}">s'enregistrer ou</a><br>
+
+	<a href="{{ path('app_login') }}">se connecter</a>
+	</div>
+	{% endif %}
+
 	{% include("header/header.html.twig")%}
 		
 

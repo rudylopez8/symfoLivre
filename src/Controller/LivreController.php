@@ -41,6 +41,8 @@ class LivreController extends AbstractController
     #[Route('/newLivre', name: 'app_livre_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
+        if ($this->isGranted('ROLE_AUTOR')) {
+
         $livre = new Livre();
     
         // Continuez avec le formulaire principal
@@ -86,10 +88,14 @@ class LivreController extends AbstractController
             'form' => $form,
         ]);
     }
+    return $this->render('user/erreur.html.twig');  
+    }
         
     #[Route('/uploadLivre', name: 'app_uploadLivre', methods: ['GET', 'POST'])]
     public function uploadFile(Request $request): Response
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
+
 //        dd('uploadFile called');
         $form = $this->createForm(UploadFileType::class);
 
@@ -98,12 +104,8 @@ class LivreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
 
-            // Gérez le téléversement du fichier ici
-            // Exemple : déplacez le fichier vers un dossier spécifique
             $uploadsDirectory = $this->getParameter('kernel.project_dir') . '/public/dataLivre';
             $file->move($uploadsDirectory, $file->getClientOriginalName());
-
-            // Ajoutez d'autres traitements si nécessaire
 
             $this->addFlash('success', 'Le fichier a été téléversé avec succès.');
             return $this->redirectToRoute('app_uploadLivre');
@@ -112,6 +114,8 @@ class LivreController extends AbstractController
         return $this->render('livre/testUpload.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+    return $this->render('user/erreur.html.twig');  
     }
 
     #[Route('/{id}/livre_show', name: 'livre_show', methods: ['GET'])]
@@ -125,15 +129,18 @@ class LivreController extends AbstractController
     #[Route('/{id}/livre_download', name: 'livre_download', methods: ['GET'])]
     public function download(Livre $livre): Response
     {
+        if ($this->isGranted('ROLE_USER')) {
         $fileName = $livre->getFichierLivre();
     
         // Générez la réponse pour le téléchargement
         $response = new Response();
-//        $response->headers->set('Content-Type', 'application/txt'); // Mettez le type de fichier correct
+//        $response->headers->set('Content-Type', 'application/txt'); // Mettre le type de fichier correct
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
         $response->setContent(file_get_contents($this->getParameter('kernel.project_dir') . '/public/dataLivre/' . $fileName));
     
         return $response;
+    }
+    return $this->render('user/erreur.html.twig');  
     }
     
 

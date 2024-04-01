@@ -1,7 +1,14 @@
-{% extends 'base-user.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'base-admin.html.twig' : 'base.html.twig' %}
 
 
 {% block body %}
+					{% if app.user %}
+						<div class="mb-3">
+							bonjour
+							{{ app.user.userIdentifier }},
+							<a href="{{ path('app_logout') }}">Logout</a>
+						</div>
+					{% endif %}
     
     {% include("main/main.html.twig")%}    
 {% endblock %}

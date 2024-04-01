@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+{% if is_granted('ROLE_AUTOR') %}
+	<div class="mb-3">
+salut
+	</div>
+	{% endif %}
+    
+	{% include("main/main.html.twig")%}  
+
+{% endblock %}

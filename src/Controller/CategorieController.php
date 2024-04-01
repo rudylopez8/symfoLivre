@@ -29,6 +29,7 @@ class CategorieController extends AbstractController
     #[Route('/categorie_new', name: 'categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CategorieRepository $categorieRepository, EntityManagerInterface $em): Response
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
         $categorie = new Categorie();
         $form = $this->createForm(CategorieType::class, $categorie);
         
@@ -48,11 +49,13 @@ class CategorieController extends AbstractController
             'form' => $form,
         ]);
     }
-
-      #[Route('/{id}/categorie_edit', name: 'categorie_edit', methods: ['POST'])]
-      public function edit( EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
+    return $this->render('user/erreur.html.twig');  
+    }
+    #[Route('/{id}/categorie_edit', name: 'categorie_edit', methods: ['GET', 'POST'])]
+    public function edit(EntityManagerInterface $em, Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
       {
-          $form = $this->createForm(CategorieType::class, $categorie);
+        if ($this->isGranted('ROLE_ADMIN')) {
+        $form = $this->createForm(CategorieType::class, $categorie);
           $form->handleRequest($request);
   
           if ($form->isSubmitted() && $form->isValid()) {
@@ -67,11 +70,14 @@ class CategorieController extends AbstractController
               'categorie' => $categorie,
               'form' => $form,
           ]);
-     } 
+        }
+        return $this->render('user/erreur.html.twig');      
+    } 
   
     #[Route('/{id}/cate_sup', name: 'cate_sup', methods:['POST'])]
     public function suppr(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, EntityManagerInterface $manager): Response
         {
+        if ($this->isGranted('ROLE_ADMIN')) {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {        
             $manager->remove($categorie);
             
@@ -81,5 +87,8 @@ class CategorieController extends AbstractController
             $manager->flush();
         }
         return $this->redirectToRoute('app_categorie', [], Response::HTTP_SEE_OTHER);
+    }
+    return $this->render('user/erreur.html.twig');      
+
     }
 }

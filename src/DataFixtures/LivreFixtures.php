@@ -7,29 +7,51 @@ use App\Entity\User;
 use App\Entity\Categorie;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Security\UserAuthenticator;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Core\Security;
+
+
 
 class LivreFixtures extends Fixture
 {
+    private $userPasswordHasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
+    }
     public function load(ObjectManager $manager): void
     {
-        // Créer un objet Faker pour générer des données aléatoires
-        $faker = Faker\Factory::create('fr_FR');
-
         // Créer des utilisateurs
-        for ($i = 0; $i < 5; $i++) {
+        $usersData = [
+            ['nomUser' => 'lapin', 'email' => 'user1@gmail.com', 'password' => 'password1', 'roles' => ['ROLE_USER']],
+            ['nomUser' => 'chat', 'email' => 'user2@gmail.com', 'password' => 'password2', 'roles' => ['ROLE_USER']],
+            ['nomUser' => 'oiseau', 'email' => 'user3@gmail.com', 'password' => 'password3', 'roles' => ['ROLE_USER']],
+            ['nomUser' => 'sourie', 'email' => 'user4@gmail.com', 'password' => 'password4', 'roles' => ['ROLE_AUTOR']],
+            ['nomUser' => 'musaraigne', 'email' => 'user5@gmail.com', 'password' => 'password5', 'roles' => ['ROLE_ADMIN']],
+        ];
+
+        $users = [];
+        foreach ($usersData as $userData) {
             $user = new User();
-            $password = "password".$i;
-//            $roleUser = new Role('ROLE_USER');
             $user
-                ->setNomUser($faker->lastName())
-                ->setEmail("user{$i}@gmail.com")
-                ->setPassword($password)        
-//                ->setRoles(['ROLES_USER']);
-;
+                ->setNomUser($userData['nomUser'])
+                ->setEmail($userData['email'])
+//                ->setPasswordAndHash($userData['password'])
+                ->setPasswordAndHash($this->userPasswordHasher, $userData['password'])
+                ->setRoles($userData['roles']);
             $manager->persist($user);
+            $users[] = $user;
         }
 
+        // Créer des catégories
         $categoriesData = [
             ['nomCategorie' => 'Science-fiction', 'informationCategorie' => 'Livres de science-fiction'],
             ['nomCategorie' => 'Roman', 'informationCategorie' => 'Livres romans'],
@@ -48,14 +70,15 @@ class LivreFixtures extends Fixture
             // Créer des livres
             for ($k = 0; $k < 3; $k++) {
                 $livre = new Livre();
+                $randomCategory = $categoriesData[array_rand($categoriesData)];
                 $livre
-                    ->setTitreLivre($faker->sentence())
-                    ->setFichierLivre('chemin/vers/le/fichier.pdf')
-                    ->setAuteurLivre($user)
+                    ->setTitreLivre('Titre du livre ' . ($k + 1))
+                    ->setFichierLivre('test.txt')
+                    ->setAuteurLivre($users[3]) // 4ème utilisateur créé
                     ->setCategorieLivre($categorie)
-                    ->setResumeLivre($faker->word())
-                    ->setPrixLivre($faker->randomFloat(2, 10, 100))
-                    ->setDateUploadLivre($faker->dateTimeBetween('-1 year', 'now'));
+                    ->setResumeLivre('Résumé du livre ' . ($k + 1))
+                    ->setPrixLivre(random_int(10, 100))
+                    ->setDateUploadLivre(new \DateTime());
                 $manager->persist($livre);
             }
         }

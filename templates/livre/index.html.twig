@@ -1,4 +1,4 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Hello LivreController!
 {% endblock %}
@@ -33,6 +33,7 @@
 								<tr>
 									<th>Id</th>
 									<th>titre</th>
+									<th>prix</th>
 									<th>auteur</th>
 									<th>actions</th>
 								</tr>
@@ -43,6 +44,8 @@
 									<tr>
 										<td>{{ livre.id }}</td>
 										<td>{{ livre.titreLivre }}</td>
+										<td>{{ livre.prixLivre }}</td>
+
 										<td>{{ livre.auteurLivre.nomUser }}</td>
 										<td>
 
@@ -51,10 +54,10 @@
                                 <a href="{{ path('livre_download', {'id': livre.id}) }}"  class="btn btn-success" ></a>
 <th>{{ include('livre/_delete_form.html.twig') }}   </th>
 
-                                        //        <a href="{{ path('livre_show', {'id': livre.id}) }}" class="btn btn-success">editer</a>
+                                                {#<a href="{{ path('livre_show', {'id': livre.id}) }}" class="btn btn-success">editer</a>#}
                                                 {% endif %}
 										</td>
-										{% if app.user %} <th>{{ include('livre/_delete_form.html.twig') }}</th> {% endif %}
+										{#{% if app.user %} <th>{{ include('livre/_delete_form.html.twig') }}</th> {% endif %}#}
 									</tr>
 								</td>
 							</tbody>
